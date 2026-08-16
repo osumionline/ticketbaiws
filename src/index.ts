@@ -19,3 +19,26 @@ export type {
 } from './model/common/ticketbaiws-response.model.js';
 
 export type { default as TicketBaiWsStatusResponse } from './model/system/ticketbaiws-status-response.model.js';
+
+export type { default as TicketBaiWsCreateInvoiceRequest } from './model/invoice/ticketbaiws-create-invoice-request.model.js';
+
+export type {
+  TicketBaiWsCreateInvoiceResponse,
+  TicketBaiWsCreateInvoiceResult,
+  TicketBaiWsTicketBaiInvoiceResult,
+  TicketBaiWsVerifactuInvoiceResult,
+} from './model/invoice/ticketbaiws-create-invoice-response.model.js';
+
+export type {
+  TicketBaiWsInvoiceLine,
+  TicketBaiWsRectifiedInvoice,
+} from './model/invoice/ticketbaiws-invoice.model.js';
+
+export type {
+  TicketBaiWsDocumentType,
+  TicketBaiWsExemptionCause,
+  TicketBaiWsOperationType,
+  TicketBaiWsRectificationKey,
+  TicketBaiWsRectificationType,
+  TicketBaiWsThirdPartyIssue,
+} from './model/invoice/ticketbaiws-invoice.types.js';
