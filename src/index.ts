@@ -61,3 +61,10 @@ export type {
   TicketBaiWsTicketBaiInvoiceStatusResult,
   TicketBaiWsVerifactuInvoiceStatusResult,
 } from './model/invoice/ticketbaiws-get-invoice-response.model.js';
+
+export type {
+  default as TicketBaiWsCompleteInvoiceRequest,
+  TicketBaiWsSimplifiedInvoiceReference,
+} from './model/invoice/ticketbaiws-complete-invoice-request.model.js';
+
+export type { TicketBaiWsCompleteInvoiceResponse } from './model/invoice/ticketbaiws-complete-invoice-response.model.js';

@@ -1,8 +1,11 @@
 import TicketBaiWsHttpClient from '../client/ticketbaiws-http-client.js';
+import type TicketBaiWsCompleteInvoiceRequest from '../model/invoice/ticketbaiws-complete-invoice-request.model.js';
+import type { TicketBaiWsCompleteInvoiceResponse } from '../model/invoice/ticketbaiws-complete-invoice-response.model.js';
 import type TicketBaiWsCreateInvoiceRequest from '../model/invoice/ticketbaiws-create-invoice-request.model.js';
 import type {
   TicketBaiWsCreateInvoiceResponse,
   TicketBaiWsCreateInvoiceResult,
+  TicketBaiWsTicketBaiInvoiceResult,
 } from '../model/invoice/ticketbaiws-create-invoice-response.model.js';
 import type {
   TicketBaiWsGetInvoiceResponse,
@@ -27,6 +30,18 @@ class TicketBaiWsInvoicesResource {
     return this.httpClient.request<TicketBaiWsCreateInvoiceResult>(
       'POST',
       'tbai/',
+      {
+        json: invoice,
+      },
+    );
+  }
+
+  async completeSimplified(
+    invoice: TicketBaiWsCompleteInvoiceRequest,
+  ): Promise<TicketBaiWsCompleteInvoiceResponse> {
+    return this.httpClient.request<TicketBaiWsTicketBaiInvoiceResult>(
+      'POST',
+      'tbai-completar/',
       {
         json: invoice,
       },
