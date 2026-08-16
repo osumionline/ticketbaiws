@@ -42,3 +42,22 @@ export type {
   TicketBaiWsRectificationType,
   TicketBaiWsThirdPartyIssue,
 } from './model/invoice/ticketbaiws-invoice.types.js';
+
+export type {
+  TicketBaiWsCancelInvoiceResponse,
+  TicketBaiWsInvoiceActionResult,
+  TicketBaiWsResendInvoiceResponse,
+} from './model/invoice/ticketbaiws-invoice-action-response.model.js';
+
+export type {
+  TicketBaiWsCancelInvoiceRequest,
+  TicketBaiWsInvoiceReference,
+} from './model/invoice/ticketbaiws-invoice-reference.model.js';
+
+export type {
+  TicketBaiWsGetInvoiceResponse,
+  TicketBaiWsGetInvoiceResult,
+  TicketBaiWsInvoiceStatus,
+  TicketBaiWsTicketBaiInvoiceStatusResult,
+  TicketBaiWsVerifactuInvoiceStatusResult,
+} from './model/invoice/ticketbaiws-get-invoice-response.model.js';
