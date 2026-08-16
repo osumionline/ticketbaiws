@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-
 import TicketBaiWsClient from '../../src/client/ticketbaiws-client.js';
 import TicketBaiWsConfigurationError from '../../src/errors/ticketbaiws-configuration-error.js';
 import type TicketBaiWsClientOptions from '../../src/model/common/ticketbaiws-client-options.model.js';

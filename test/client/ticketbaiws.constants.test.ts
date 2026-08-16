@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-
 import TICKETBAIWS_BASE_URLS from '../../src/client/ticketbaiws.constants.js';
 
 describe('TICKETBAIWS_BASE_URLS', (): void => {
