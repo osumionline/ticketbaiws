@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import TicketBaiWsHttpClient from '../../src/client/ticketbaiws-http-client.js';
 import TicketBaiWsApiError from '../../src/errors/ticketbaiws-api-error.js';
 import TicketBaiWsHttpError from '../../src/errors/ticketbaiws-http-error.js';
@@ -24,6 +25,7 @@ function createSuccessResponse(returnValue: unknown = []): Response {
 describe('TicketBaiWsHttpClient', (): void => {
   it('sends a GET request with authentication headers', async (): Promise<void> => {
     const response = createSuccessResponse();
+
     const fetchImplementation = vi
       .fn<typeof globalThis.fetch>()
       .mockResolvedValue(response);
@@ -42,18 +44,23 @@ describe('TicketBaiWsHttpClient', (): void => {
       return: [],
       msg: null,
     });
+
     expect(fetchImplementation).toHaveBeenCalledOnce();
 
     const [input, init] = fetchImplementation.mock.calls[0] ?? [];
 
     expect(input).toBe('https://api-test.ticketbaiws.eus/status/');
+
     expect(init?.method).toBe('GET');
 
     const headers = new Headers(init?.headers);
 
     expect(headers.get('Accept')).toBe('application/json');
+
     expect(headers.get('Token')).toBe('test-token');
+
     expect(headers.get('Nif')).toBe('00000014Z');
+
     expect(headers.has('Content-Type')).toBe(false);
   });
 
@@ -108,10 +115,13 @@ describe('TicketBaiWsHttpClient', (): void => {
     });
 
     const [, init] = fetchImplementation.mock.calls[0] ?? [];
+
     const headers = new Headers(init?.headers);
 
     expect(init?.method).toBe('POST');
+
     expect(init?.body).toBe(JSON.stringify(body));
+
     expect(headers.get('Content-Type')).toBe('application/json');
   });
 
@@ -142,9 +152,11 @@ describe('TicketBaiWsHttpClient', (): void => {
     });
 
     const [, init] = fetchImplementation.mock.calls[0] ?? [];
+
     const headers = new Headers(init?.headers);
 
     expect(init?.body).toBe(formData);
+
     expect(headers.has('Content-Type')).toBe(false);
   });
 
@@ -273,6 +285,78 @@ describe('TicketBaiWsHttpClient', (): void => {
     }
   });
 
+  it('builds the HTTP error message when statusText is empty', async (): Promise<void> => {
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response('Service unavailable', {
+          status: 503,
+          statusText: '',
+        }),
+      );
+
+    const client = new TicketBaiWsHttpClient(
+      'https://api-test.ticketbaiws.eus/',
+      'test-token',
+      '00000014Z',
+      fetchImplementation,
+    );
+
+    try {
+      await client.request('GET', 'status/');
+
+      expect.unreachable();
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(TicketBaiWsHttpError);
+
+      if (error instanceof TicketBaiWsHttpError) {
+        expect(error.message).toBe(
+          'TicketBaiWS HTTP request failed with status 503.',
+        );
+      }
+    }
+  });
+
+  it('throws a response error when the response body cannot be read', async (): Promise<void> => {
+    const cause = new Error('Unable to read body');
+
+    const response = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: vi.fn().mockRejectedValue(cause),
+    } as unknown as Response;
+
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(response);
+
+    const client = new TicketBaiWsHttpClient(
+      'https://api-test.ticketbaiws.eus/',
+      'test-token',
+      '00000014Z',
+      fetchImplementation,
+    );
+
+    try {
+      await client.request('GET', 'status/');
+
+      expect.unreachable();
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(TicketBaiWsResponseError);
+
+      if (error instanceof TicketBaiWsResponseError) {
+        expect(error.message).toBe(
+          'Unable to read the TicketBaiWS response body.',
+        );
+
+        expect(error.responseBody).toBe('');
+
+        expect(error.cause).toBe(cause);
+      }
+    }
+  });
+
   it('throws a response error when the response is not valid JSON', async (): Promise<void> => {
     const fetchImplementation = vi
       .fn<typeof globalThis.fetch>()
@@ -302,32 +386,69 @@ describe('TicketBaiWsHttpClient', (): void => {
     }
   });
 
-  it('throws a response error when the response structure is invalid', async (): Promise<void> => {
-    const fetchImplementation = vi
-      .fn<typeof globalThis.fetch>()
-      .mockResolvedValue(
-        new Response(
-          JSON.stringify({
-            result: 'OK',
-            return: [],
-          }),
-          {
+  it.each([
+    ['a primitive response', 'invalid'],
+    ['an array response', []],
+    [
+      'a response without result',
+      {
+        return: [],
+        msg: null,
+      },
+    ],
+    [
+      'a response with an invalid result',
+      {
+        result: 'UNKNOWN',
+        return: [],
+        msg: null,
+      },
+    ],
+    [
+      'a response without return',
+      {
+        result: 'OK',
+        msg: null,
+      },
+    ],
+    [
+      'a response without msg',
+      {
+        result: 'OK',
+        return: [],
+      },
+    ],
+    [
+      'a response with an invalid msg',
+      {
+        result: 'OK',
+        return: [],
+        msg: 123,
+      },
+    ],
+  ])(
+    'throws a response error for %s',
+    async (_description: string, apiResponse: unknown): Promise<void> => {
+      const fetchImplementation = vi
+        .fn<typeof globalThis.fetch>()
+        .mockResolvedValue(
+          new Response(JSON.stringify(apiResponse), {
             status: 200,
-          },
-        ),
+          }),
+        );
+
+      const client = new TicketBaiWsHttpClient(
+        'https://api-test.ticketbaiws.eus/',
+        'test-token',
+        '00000014Z',
+        fetchImplementation,
       );
 
-    const client = new TicketBaiWsHttpClient(
-      'https://api-test.ticketbaiws.eus/',
-      'test-token',
-      '00000014Z',
-      fetchImplementation,
-    );
-
-    await expect(client.request('GET', 'status/')).rejects.toBeInstanceOf(
-      TicketBaiWsResponseError,
-    );
-  });
+      await expect(client.request('GET', 'status/')).rejects.toBeInstanceOf(
+        TicketBaiWsResponseError,
+      );
+    },
+  );
 
   it('throws an API error when TicketBaiWS returns ERROR', async (): Promise<void> => {
     const apiResponse = {
@@ -364,4 +485,43 @@ describe('TicketBaiWsHttpClient', (): void => {
       });
     }
   });
+
+  it.each([null, '   '])(
+    'uses the default API error message when msg is %s',
+    async (msg: string | null): Promise<void> => {
+      const fetchImplementation = vi
+        .fn<typeof globalThis.fetch>()
+        .mockResolvedValue(
+          new Response(
+            JSON.stringify({
+              result: 'ERROR',
+              return: [],
+              msg,
+            }),
+            {
+              status: 200,
+            },
+          ),
+        );
+
+      const client = new TicketBaiWsHttpClient(
+        'https://api-test.ticketbaiws.eus/',
+        'test-token',
+        '00000014Z',
+        fetchImplementation,
+      );
+
+      try {
+        await client.request('GET', 'status/');
+
+        expect.unreachable();
+      } catch (error: unknown) {
+        expect(error).toBeInstanceOf(TicketBaiWsApiError);
+
+        if (error instanceof TicketBaiWsApiError) {
+          expect(error.message).toBe('TicketBaiWS API returned an error.');
+        }
+      }
+    },
+  );
 });

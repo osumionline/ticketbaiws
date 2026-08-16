@@ -1,10 +1,15 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
 import TicketBaiWsClient from '../../src/client/ticketbaiws-client.js';
 import TicketBaiWsConfigurationError from '../../src/errors/ticketbaiws-configuration-error.js';
 import type TicketBaiWsClientOptions from '../../src/model/common/ticketbaiws-client-options.model.js';
 import type TicketBaiWsEnvironment from '../../src/model/common/ticketbaiws-environment.type.js';
 
 describe('TicketBaiWsClient', (): void => {
+  afterEach((): void => {
+    vi.unstubAllGlobals();
+  });
+
   it('creates a client with valid options', (): void => {
     const fetchImplementation = vi.fn<typeof globalThis.fetch>();
 
@@ -114,11 +119,92 @@ describe('TicketBaiWsClient', (): void => {
     const result = await client.system.status();
 
     expect(result).toEqual(apiResponse);
-
     expect(fetchImplementation).toHaveBeenCalledOnce();
 
     const [input] = fetchImplementation.mock.calls[0] ?? [];
 
     expect(input).toBe('https://api-test.ticketbaiws.eus/status/');
+  });
+
+  it('uses global fetch when no custom fetch is provided', async (): Promise<void> => {
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            result: 'OK',
+            return: [],
+            msg: 'Ready',
+          }),
+          {
+            status: 200,
+          },
+        ),
+      );
+
+    vi.stubGlobal('fetch', fetchImplementation);
+
+    const client = new TicketBaiWsClient({
+      token: 'test-token',
+      issuerNif: '00000014Z',
+      environment: 'test',
+    });
+
+    await client.system.status();
+
+    expect(fetchImplementation).toHaveBeenCalledOnce();
+  });
+
+  it('throws when neither custom nor global fetch is available', (): void => {
+    vi.stubGlobal('fetch', undefined);
+
+    expect(
+      (): TicketBaiWsClient =>
+        new TicketBaiWsClient({
+          token: 'test-token',
+          issuerNif: '00000014Z',
+          environment: 'test',
+        }),
+    ).toThrow(
+      new TicketBaiWsConfigurationError(
+        'No fetch implementation is available.',
+      ),
+    );
+  });
+
+  it('uses the production URL and trims credentials', async (): Promise<void> => {
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            result: 'OK',
+            return: [],
+            msg: 'Ready',
+          }),
+          {
+            status: 200,
+          },
+        ),
+      );
+
+    const client = new TicketBaiWsClient({
+      token: '  test-token  ',
+      issuerNif: '  00000014Z  ',
+      environment: 'production',
+      fetch: fetchImplementation,
+    });
+
+    await client.system.status();
+
+    const [input, init] = fetchImplementation.mock.calls[0] ?? [];
+
+    expect(input).toBe('https://api.ticketbaiws.eus/status/');
+
+    const headers = new Headers(init?.headers);
+
+    expect(headers.get('Token')).toBe('test-token');
+
+    expect(headers.get('Nif')).toBe('00000014Z');
   });
 });
