@@ -1,10 +1,11 @@
 import TicketBaiWsConfigurationError from '../errors/ticketbaiws-configuration-error.js';
 import type TicketBaiWsClientOptions from '../model/common/ticketbaiws-client-options.model.js';
+import TicketBaiWsSystemResource from '../resources/system.resource.js';
 import TicketBaiWsHttpClient from './ticketbaiws-http-client.js';
 import TICKETBAIWS_BASE_URLS from './ticketbaiws.constants.js';
 
 class TicketBaiWsClient {
-  private readonly httpClient: TicketBaiWsHttpClient;
+  readonly system: TicketBaiWsSystemResource;
 
   constructor(options: TicketBaiWsClientOptions) {
     if (typeof options !== 'object' || options === null) {
@@ -51,12 +52,14 @@ class TicketBaiWsClient {
       );
     }
 
-    this.httpClient = new TicketBaiWsHttpClient(
+    const httpClient = new TicketBaiWsHttpClient(
       TICKETBAIWS_BASE_URLS[options.environment],
       options.token.trim(),
       options.issuerNif.trim(),
       fetchImplementation as typeof globalThis.fetch,
     );
+
+    this.system = new TicketBaiWsSystemResource(httpClient);
   }
 }
 

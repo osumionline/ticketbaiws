@@ -88,4 +88,37 @@ describe('TicketBaiWsClient', (): void => {
       ),
     );
   });
+
+  it('exposes the system resource', async (): Promise<void> => {
+    const apiResponse = {
+      result: 'OK',
+      return: [],
+      msg: 'Ready',
+    };
+
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(JSON.stringify(apiResponse), {
+          status: 200,
+        }),
+      );
+
+    const client = new TicketBaiWsClient({
+      token: 'test-token',
+      issuerNif: '00000014Z',
+      environment: 'test',
+      fetch: fetchImplementation,
+    });
+
+    const result = await client.system.status();
+
+    expect(result).toEqual(apiResponse);
+
+    expect(fetchImplementation).toHaveBeenCalledOnce();
+
+    const [input] = fetchImplementation.mock.calls[0] ?? [];
+
+    expect(input).toBe('https://api-test.ticketbaiws.eus/status/');
+  });
 });

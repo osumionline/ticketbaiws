@@ -17,3 +17,5 @@ export type {
   TicketBaiWsResult,
   TicketBaiWsSuccessResponse,
 } from './model/common/ticketbaiws-response.model.js';
+
+export type { default as TicketBaiWsStatusResponse } from './model/system/ticketbaiws-status-response.model.js';
