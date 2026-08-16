@@ -1,0 +1,58 @@
+{
+  "name": "@osumi/ticketbaiws",
+  "version": "0.1.0",
+  "description": "Universal TypeScript SDK for the TicketBaiWS API.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osumionline/ticketbaiws.git"
+  },
+  "keywords": [
+    "ticketbai",
+    "ticketbaiws",
+    "verifactu",
+    "berein",
+    "typescript",
+    "sdk",
+    "osumi"
+  ],
+  "author": "Iñigo Gorosabel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/osumionline/ticketbaiws/issues"
+  },
+  "homepage": "https://github.com/osumionline/ticketbaiws#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "eslint": "^10.8.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.10"
+  }
+}
