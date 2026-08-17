@@ -145,14 +145,76 @@ interface TicketBaiWsLroeReceivedInvoicesMutationResult {
 type TicketBaiWsLroeReceivedInvoicesMutationResponse =
   TicketBaiWsSuccessResponse<TicketBaiWsLroeReceivedInvoicesMutationResult>;
 
+interface TicketBaiWsListLroeReceivedInvoicesRequest {
+  readonly ejercicio: number;
+  readonly fecha_factura_desde?: string;
+  readonly fecha_factura_hasta?: string;
+  readonly fecha_recepcion_desde?: string;
+  readonly fecha_recepcion_hasta?: string;
+  readonly pais_emisor?: string;
+  readonly tipo_documento?: TicketBaiWsLroeReceivedInvoiceDocumentType;
+  readonly nif?: string;
+  readonly num_factura?: string;
+  readonly epigrafe?: string;
+  readonly estado?: TicketBaiWsLroeReceivedInvoiceResultStatus;
+  readonly pagina?: number;
+}
+
+interface TicketBaiWsLroeReceivedInvoiceQueryBase {
+  readonly base_imponible: string;
+  readonly tipo_iva: string;
+}
+
+interface TicketBaiWsLroeReceivedInvoiceQueryItem {
+  readonly fecha: string;
+  readonly fecha_operacion: string;
+  readonly fecha_recepcion: string;
+  readonly num_factura: string;
+  readonly descripcion: string;
+  readonly nif: string;
+  readonly nombre_social: string;
+  readonly bases: readonly TicketBaiWsLroeReceivedInvoiceQueryBase[];
+  readonly importe_total: string;
+  readonly inversion_sujeto_pasivo: boolean;
+  readonly regimen_iva: string;
+  readonly fecha_presentacion: string;
+  readonly fecha_modificacion: string;
+  readonly estado: TicketBaiWsLroeReceivedInvoiceResultStatus;
+}
+
+interface TicketBaiWsListLroeReceivedInvoicesResult {
+  readonly response: readonly TicketBaiWsLroeReceivedInvoiceQueryItem[];
+}
+
+type TicketBaiWsListLroeReceivedInvoicesResponse =
+  TicketBaiWsSuccessResponse<TicketBaiWsListLroeReceivedInvoicesResult>;
+
+interface TicketBaiWsCancelLroeReceivedInvoice {
+  readonly nif: string;
+  readonly pais?: string;
+  readonly num_factura: string;
+}
+
+interface TicketBaiWsCancelLroeReceivedInvoicesRequest {
+  readonly ejercicio: number;
+  readonly facturas: readonly TicketBaiWsCancelLroeReceivedInvoice[];
+}
+
 export type {
+  TicketBaiWsCancelLroeReceivedInvoice,
+  TicketBaiWsCancelLroeReceivedInvoicesRequest,
   TicketBaiWsCreateLroeReceivedInvoicesRequest,
+  TicketBaiWsListLroeReceivedInvoicesRequest,
+  TicketBaiWsListLroeReceivedInvoicesResponse,
+  TicketBaiWsListLroeReceivedInvoicesResult,
   TicketBaiWsLroeReceivedInvoice,
   TicketBaiWsLroeReceivedInvoiceBase,
   TicketBaiWsLroeReceivedInvoiceDocumentType,
   TicketBaiWsLroeReceivedInvoiceIrpfVatAssetType,
   TicketBaiWsLroeReceivedInvoiceKey,
   TicketBaiWsLroeReceivedInvoiceOperationResult,
+  TicketBaiWsLroeReceivedInvoiceQueryBase,
+  TicketBaiWsLroeReceivedInvoiceQueryItem,
   TicketBaiWsLroeReceivedInvoiceRectificationKey,
   TicketBaiWsLroeReceivedInvoiceRectificationType,
   TicketBaiWsLroeReceivedInvoiceResultStatus,

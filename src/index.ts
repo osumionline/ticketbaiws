@@ -139,13 +139,20 @@ export type {
 } from './model/bizkaia/ticketbaiws-epigraph.model.js';
 
 export type {
+  TicketBaiWsCancelLroeReceivedInvoice,
+  TicketBaiWsCancelLroeReceivedInvoicesRequest,
   TicketBaiWsCreateLroeReceivedInvoicesRequest,
+  TicketBaiWsListLroeReceivedInvoicesRequest,
+  TicketBaiWsListLroeReceivedInvoicesResponse,
+  TicketBaiWsListLroeReceivedInvoicesResult,
   TicketBaiWsLroeReceivedInvoice,
   TicketBaiWsLroeReceivedInvoiceBase,
   TicketBaiWsLroeReceivedInvoiceDocumentType,
   TicketBaiWsLroeReceivedInvoiceIrpfVatAssetType,
   TicketBaiWsLroeReceivedInvoiceKey,
   TicketBaiWsLroeReceivedInvoiceOperationResult,
+  TicketBaiWsLroeReceivedInvoiceQueryBase,
+  TicketBaiWsLroeReceivedInvoiceQueryItem,
   TicketBaiWsLroeReceivedInvoiceRectificationKey,
   TicketBaiWsLroeReceivedInvoiceRectificationType,
   TicketBaiWsLroeReceivedInvoiceResultStatus,
