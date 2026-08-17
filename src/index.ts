@@ -68,3 +68,10 @@ export type {
 } from './model/invoice/ticketbaiws-complete-invoice-request.model.js';
 
 export type { TicketBaiWsCompleteInvoiceResponse } from './model/invoice/ticketbaiws-complete-invoice-response.model.js';
+
+export type { default as TicketBaiWsListInvoicesRequest } from './model/invoice/ticketbaiws-list-invoices-request.model.js';
+
+export type {
+  TicketBaiWsInvoiceListItem,
+  TicketBaiWsListInvoicesResponse,
+} from './model/invoice/ticketbaiws-list-invoices-response.model.js';

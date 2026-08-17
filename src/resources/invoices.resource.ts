@@ -20,6 +20,11 @@ import type {
   TicketBaiWsCancelInvoiceRequest,
   TicketBaiWsInvoiceReference,
 } from '../model/invoice/ticketbaiws-invoice-reference.model.js';
+import type TicketBaiWsListInvoicesRequest from '../model/invoice/ticketbaiws-list-invoices-request.model.js';
+import type {
+  TicketBaiWsInvoiceListItem,
+  TicketBaiWsListInvoicesResponse,
+} from '../model/invoice/ticketbaiws-list-invoices-response.model.js';
 
 class TicketBaiWsInvoicesResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
@@ -61,6 +66,26 @@ class TicketBaiWsInvoicesResource {
         },
       },
     );
+  }
+
+  async list(
+    filters: TicketBaiWsListInvoicesRequest,
+  ): Promise<TicketBaiWsListInvoicesResponse> {
+    const response = await this.httpClient.request<
+      readonly TicketBaiWsInvoiceListItem[]
+    >('GET', 'tbai-list/', {
+      query: {
+        fecha_inicio: filters.fecha_inicio,
+        fecha_fin: filters.fecha_fin,
+        serie: filters.serie,
+        pagina: filters.pagina,
+        json_orig: filters.json_orig,
+        xml_request: filters.xml_request,
+        pedido: filters.pedido,
+      },
+    });
+
+    return response as TicketBaiWsListInvoicesResponse;
   }
 
   async cancel(
