@@ -94,3 +94,13 @@ export type {
   TicketBaiWsViesValidationResult,
   TicketBaiWsViesValidationStatus,
 } from './model/validation/ticketbaiws-validation.model.js';
+
+export type {
+  TicketBaiWsCompany,
+  TicketBaiWsCompanyResponse,
+  TicketBaiWsCompanyTaxAuthority,
+  TicketBaiWsCreateCompanyRequest,
+  TicketBaiWsListCompaniesRequest,
+  TicketBaiWsListCompaniesResponse,
+  TicketBaiWsUpdateCompanyRequest,
+} from './model/company/ticketbaiws-company.model.js';
