@@ -124,3 +124,8 @@ export type {
   TicketBaiWsWebhookRequest,
   TicketBaiWsWebhookResponse,
 } from './model/webhook/ticketbaiws-webhook.model.js';
+
+export type {
+  TicketBaiWsRepresentationPdfResponse,
+  TicketBaiWsRepresentationTemplateRequest,
+} from './model/verifactu/ticketbaiws-representation.model.js';
