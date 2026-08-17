@@ -17,8 +17,11 @@ type TicketBaiWsRepresentationPdfResponse = TicketBaiWsSuccessResponse<string>;
 type TicketBaiWsRepresentationUploadResponse =
   TicketBaiWsSuccessResponse<string>;
 
+type TicketBaiWsRepresentationRevokeResponse = TicketBaiWsSuccessResponse<null>;
+
 export type {
   TicketBaiWsRepresentationPdfResponse,
+  TicketBaiWsRepresentationRevokeResponse,
   TicketBaiWsRepresentationTemplateRequest,
   TicketBaiWsRepresentationUploadRequest,
   TicketBaiWsRepresentationUploadResponse,

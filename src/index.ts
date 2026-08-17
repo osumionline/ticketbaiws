@@ -127,6 +127,7 @@ export type {
 
 export type {
   TicketBaiWsRepresentationPdfResponse,
+  TicketBaiWsRepresentationRevokeResponse,
   TicketBaiWsRepresentationTemplateRequest,
   TicketBaiWsRepresentationUploadRequest,
   TicketBaiWsRepresentationUploadResponse,

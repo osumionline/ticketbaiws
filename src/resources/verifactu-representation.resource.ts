@@ -1,6 +1,8 @@
 import TicketBaiWsHttpClient from '../client/ticketbaiws-http-client.js';
+
 import type {
   TicketBaiWsRepresentationPdfResponse,
+  TicketBaiWsRepresentationRevokeResponse,
   TicketBaiWsRepresentationTemplateRequest,
   TicketBaiWsRepresentationUploadRequest,
   TicketBaiWsRepresentationUploadResponse,
@@ -36,6 +38,14 @@ class TicketBaiWsVerifactuRepresentationResource {
     return this.httpClient.request<string>('POST', 'doc-representante/', {
       body: formData,
     });
+  }
+
+  async get(): Promise<TicketBaiWsRepresentationPdfResponse> {
+    return this.httpClient.request<string>('GET', 'doc-representante/');
+  }
+
+  async revoke(): Promise<TicketBaiWsRepresentationRevokeResponse> {
+    return this.httpClient.request<null>('DELETE', 'doc-representante/');
   }
 }
 
