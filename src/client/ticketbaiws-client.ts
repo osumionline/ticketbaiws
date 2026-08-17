@@ -2,12 +2,14 @@ import TicketBaiWsConfigurationError from '../errors/ticketbaiws-configuration-e
 import type TicketBaiWsClientOptions from '../model/common/ticketbaiws-client-options.model.js';
 import TicketBaiWsInvoicesResource from '../resources/invoices.resource.js';
 import TicketBaiWsSystemResource from '../resources/system.resource.js';
+import TicketBaiWsValidationResource from '../resources/validation.resource.js';
 import TicketBaiWsHttpClient from './ticketbaiws-http-client.js';
 import TICKETBAIWS_BASE_URLS from './ticketbaiws.constants.js';
 
 class TicketBaiWsClient {
   readonly invoices: TicketBaiWsInvoicesResource;
   readonly system: TicketBaiWsSystemResource;
+  readonly validation: TicketBaiWsValidationResource;
 
   constructor(options: TicketBaiWsClientOptions) {
     if (typeof options !== 'object' || options === null) {
@@ -63,6 +65,7 @@ class TicketBaiWsClient {
 
     this.invoices = new TicketBaiWsInvoicesResource(httpClient);
     this.system = new TicketBaiWsSystemResource(httpClient);
+    this.validation = new TicketBaiWsValidationResource(httpClient);
   }
 }
 

@@ -83,3 +83,14 @@ export type {
   TicketBaiWsInvoiceXmlResponse,
   TicketBaiWsInvoiceXmlResult,
 } from './model/invoice/ticketbaiws-invoice-download.model.js';
+
+export type {
+  TicketBaiWsAeatValidationRequest,
+  TicketBaiWsAeatValidationResponse,
+  TicketBaiWsAeatValidationResult,
+  TicketBaiWsAeatValidationStatus,
+  TicketBaiWsViesValidationRequest,
+  TicketBaiWsViesValidationResponse,
+  TicketBaiWsViesValidationResult,
+  TicketBaiWsViesValidationStatus,
+} from './model/validation/ticketbaiws-validation.model.js';
