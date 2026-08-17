@@ -49,7 +49,7 @@ const run = (command, args, options = {}) => {
 };
 
 try {
-  runNpm(['pack', '--pack-destination', tempDir]);
+  runNpm(['pack', '--dry-run=false', '--pack-destination', tempDir]);
 
   const tarballs = readdirSync(tempDir).filter((file) => file.endsWith('.tgz'));
 
@@ -80,6 +80,7 @@ try {
     [
       'install',
       tarballPath,
+      '--dry-run=false',
       '--ignore-scripts',
       '--no-audit',
       '--no-fund',
