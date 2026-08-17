@@ -75,3 +75,11 @@ export type {
   TicketBaiWsInvoiceListItem,
   TicketBaiWsListInvoicesResponse,
 } from './model/invoice/ticketbaiws-list-invoices-response.model.js';
+
+export type {
+  TicketBaiWsFacturaERequest,
+  TicketBaiWsFacturaEResponse,
+  TicketBaiWsInvoicePdfResponse,
+  TicketBaiWsInvoiceXmlResponse,
+  TicketBaiWsInvoiceXmlResult,
+} from './model/invoice/ticketbaiws-invoice-download.model.js';

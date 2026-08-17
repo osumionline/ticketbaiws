@@ -17,6 +17,13 @@ import type {
   TicketBaiWsResendInvoiceResponse,
 } from '../model/invoice/ticketbaiws-invoice-action-response.model.js';
 import type {
+  TicketBaiWsFacturaERequest,
+  TicketBaiWsFacturaEResponse,
+  TicketBaiWsInvoicePdfResponse,
+  TicketBaiWsInvoiceXmlResponse,
+  TicketBaiWsInvoiceXmlResult,
+} from '../model/invoice/ticketbaiws-invoice-download.model.js';
+import type {
   TicketBaiWsCancelInvoiceRequest,
   TicketBaiWsInvoiceReference,
 } from '../model/invoice/ticketbaiws-invoice-reference.model.js';
@@ -66,6 +73,46 @@ class TicketBaiWsInvoicesResource {
         },
       },
     );
+  }
+
+  async getXml(
+    invoice: TicketBaiWsInvoiceReference,
+  ): Promise<TicketBaiWsInvoiceXmlResponse> {
+    return this.httpClient.request<TicketBaiWsInvoiceXmlResult>(
+      'GET',
+      'tbai-xml/',
+      {
+        query: {
+          serie: invoice.serie,
+          numero: invoice.numero,
+        },
+      },
+    );
+  }
+
+  async getPdf(
+    invoice: TicketBaiWsInvoiceReference,
+  ): Promise<TicketBaiWsInvoicePdfResponse> {
+    return this.httpClient.request<string>('GET', 'tbai-pdf/', {
+      query: {
+        serie: invoice.serie,
+        numero: invoice.numero,
+      },
+    });
+  }
+
+  async getFacturaE(
+    invoice: TicketBaiWsFacturaERequest,
+  ): Promise<TicketBaiWsFacturaEResponse> {
+    return this.httpClient.request<string>('GET', 'facturae/', {
+      query: {
+        serie: invoice.serie,
+        numero: invoice.numero,
+        cod_organo_gestor: invoice.cod_organo_gestor,
+        cod_unidad_tramitadora: invoice.cod_unidad_tramitadora,
+        cod_oficina_contable: invoice.cod_oficina_contable,
+      },
+    });
   }
 
   async list(
