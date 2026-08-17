@@ -5,6 +5,7 @@ import TicketBaiWsInvoicesResource from '../resources/invoices.resource.js';
 import TicketBaiWsLicensesResource from '../resources/licenses.resource.js';
 import TicketBaiWsSystemResource from '../resources/system.resource.js';
 import TicketBaiWsValidationResource from '../resources/validation.resource.js';
+import TicketBaiWsWebhooksResource from '../resources/webhooks.resource.js';
 import TicketBaiWsHttpClient from './ticketbaiws-http-client.js';
 import TICKETBAIWS_BASE_URLS from './ticketbaiws.constants.js';
 
@@ -14,6 +15,7 @@ class TicketBaiWsClient {
   readonly validation: TicketBaiWsValidationResource;
   readonly companies: TicketBaiWsCompaniesResource;
   readonly licenses: TicketBaiWsLicensesResource;
+  readonly webhooks: TicketBaiWsWebhooksResource;
 
   constructor(options: TicketBaiWsClientOptions) {
     if (typeof options !== 'object' || options === null) {
@@ -72,6 +74,7 @@ class TicketBaiWsClient {
     this.validation = new TicketBaiWsValidationResource(httpClient);
     this.companies = new TicketBaiWsCompaniesResource(httpClient);
     this.licenses = new TicketBaiWsLicensesResource(httpClient);
+    this.webhooks = new TicketBaiWsWebhooksResource(httpClient);
   }
 }
 

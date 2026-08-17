@@ -114,3 +114,13 @@ export type {
   TicketBaiWsListLicensesRequest,
   TicketBaiWsListLicensesResponse,
 } from './model/license/ticketbaiws-license.model.js';
+
+export type {
+  TicketBaiWsGetWebhookResponse,
+  TicketBaiWsGetWebhookResult,
+  TicketBaiWsListWebhooksRequest,
+  TicketBaiWsListWebhooksResponse,
+  TicketBaiWsWebhook,
+  TicketBaiWsWebhookRequest,
+  TicketBaiWsWebhookResponse,
+} from './model/webhook/ticketbaiws-webhook.model.js';
