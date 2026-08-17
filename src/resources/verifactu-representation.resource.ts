@@ -2,6 +2,8 @@ import TicketBaiWsHttpClient from '../client/ticketbaiws-http-client.js';
 import type {
   TicketBaiWsRepresentationPdfResponse,
   TicketBaiWsRepresentationTemplateRequest,
+  TicketBaiWsRepresentationUploadRequest,
+  TicketBaiWsRepresentationUploadResponse,
 } from '../model/verifactu/ticketbaiws-representation.model.js';
 
 class TicketBaiWsVerifactuRepresentationResource {
@@ -17,6 +19,22 @@ class TicketBaiWsVerifactuRepresentationResource {
         poblacion_representante: data.poblacion_representante,
         direccion_representante: data.direccion_representante,
       },
+    });
+  }
+
+  async upload(
+    data: TicketBaiWsRepresentationUploadRequest,
+  ): Promise<TicketBaiWsRepresentationUploadResponse> {
+    const formData = new FormData();
+
+    if (data.filename === undefined) {
+      formData.append('file', data.file);
+    } else {
+      formData.append('file', data.file, data.filename);
+    }
+
+    return this.httpClient.request<string>('POST', 'doc-representante/', {
+      body: formData,
     });
   }
 }

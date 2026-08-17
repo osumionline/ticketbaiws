@@ -128,4 +128,6 @@ export type {
 export type {
   TicketBaiWsRepresentationPdfResponse,
   TicketBaiWsRepresentationTemplateRequest,
+  TicketBaiWsRepresentationUploadRequest,
+  TicketBaiWsRepresentationUploadResponse,
 } from './model/verifactu/ticketbaiws-representation.model.js';

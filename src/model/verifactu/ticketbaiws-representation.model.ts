@@ -7,9 +7,19 @@ interface TicketBaiWsRepresentationTemplateRequest {
   readonly direccion_representante?: string;
 }
 
+interface TicketBaiWsRepresentationUploadRequest {
+  readonly file: Blob;
+  readonly filename?: string;
+}
+
 type TicketBaiWsRepresentationPdfResponse = TicketBaiWsSuccessResponse<string>;
+
+type TicketBaiWsRepresentationUploadResponse =
+  TicketBaiWsSuccessResponse<string>;
 
 export type {
   TicketBaiWsRepresentationPdfResponse,
   TicketBaiWsRepresentationTemplateRequest,
+  TicketBaiWsRepresentationUploadRequest,
+  TicketBaiWsRepresentationUploadResponse,
 };
