@@ -132,3 +132,8 @@ export type {
   TicketBaiWsRepresentationUploadRequest,
   TicketBaiWsRepresentationUploadResponse,
 } from './model/verifactu/ticketbaiws-representation.model.js';
+
+export type {
+  TicketBaiWsEpigraph,
+  TicketBaiWsListEpigraphsResponse,
+} from './model/bizkaia/ticketbaiws-epigraph.model.js';

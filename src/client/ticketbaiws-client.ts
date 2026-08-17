@@ -1,5 +1,6 @@
 import TicketBaiWsConfigurationError from '../errors/ticketbaiws-configuration-error.js';
 import type TicketBaiWsClientOptions from '../model/common/ticketbaiws-client-options.model.js';
+import TicketBaiWsBizkaiaResource from '../resources/bizkaia.resource.js';
 import TicketBaiWsCompaniesResource from '../resources/companies.resource.js';
 import TicketBaiWsInvoicesResource from '../resources/invoices.resource.js';
 import TicketBaiWsLicensesResource from '../resources/licenses.resource.js';
@@ -11,13 +12,14 @@ import TicketBaiWsHttpClient from './ticketbaiws-http-client.js';
 import TICKETBAIWS_BASE_URLS from './ticketbaiws.constants.js';
 
 class TicketBaiWsClient {
+  readonly bizkaia: TicketBaiWsBizkaiaResource;
+  readonly companies: TicketBaiWsCompaniesResource;
   readonly invoices: TicketBaiWsInvoicesResource;
+  readonly licenses: TicketBaiWsLicensesResource;
   readonly system: TicketBaiWsSystemResource;
   readonly validation: TicketBaiWsValidationResource;
-  readonly companies: TicketBaiWsCompaniesResource;
-  readonly licenses: TicketBaiWsLicensesResource;
-  readonly webhooks: TicketBaiWsWebhooksResource;
   readonly verifactu: TicketBaiWsVerifactuResource;
+  readonly webhooks: TicketBaiWsWebhooksResource;
 
   constructor(options: TicketBaiWsClientOptions) {
     if (typeof options !== 'object' || options === null) {
@@ -71,13 +73,14 @@ class TicketBaiWsClient {
       fetchImplementation as typeof globalThis.fetch,
     );
 
+    this.bizkaia = new TicketBaiWsBizkaiaResource(httpClient);
+    this.companies = new TicketBaiWsCompaniesResource(httpClient);
     this.invoices = new TicketBaiWsInvoicesResource(httpClient);
+    this.licenses = new TicketBaiWsLicensesResource(httpClient);
     this.system = new TicketBaiWsSystemResource(httpClient);
     this.validation = new TicketBaiWsValidationResource(httpClient);
-    this.companies = new TicketBaiWsCompaniesResource(httpClient);
-    this.licenses = new TicketBaiWsLicensesResource(httpClient);
-    this.webhooks = new TicketBaiWsWebhooksResource(httpClient);
     this.verifactu = new TicketBaiWsVerifactuResource(httpClient);
+    this.webhooks = new TicketBaiWsWebhooksResource(httpClient);
   }
 }
 
