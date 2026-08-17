@@ -137,33 +137,19 @@ Esto permite distinguir errores de configuración, respuestas del API, errores H
 
 El README ofrece únicamente una introducción general al paquete.
 
-La documentación completa, con explicación de parámetros, respuestas y ejemplos TypeScript, se encuentra en la carpeta `docs/`.
+La documentación completa incluye configuración, respuestas, errores, ejemplos TypeScript y una referencia detallada de cada dominio:
 
-El índice principal será:
+- [Índice de documentación](https://github.com/osumionline/ticketbaiws/blob/main/docs/README.md)
+- [Primeros pasos](https://github.com/osumionline/ticketbaiws/blob/main/docs/getting-started.md)
+- [Facturación](https://github.com/osumionline/ticketbaiws/blob/main/docs/invoices.md)
+- [Validaciones AEAT y VIES](https://github.com/osumionline/ticketbaiws/blob/main/docs/validation.md)
+- [Empresas](https://github.com/osumionline/ticketbaiws/blob/main/docs/companies.md)
+- [Licencias](https://github.com/osumionline/ticketbaiws/blob/main/docs/licenses.md)
+- [Webhooks](https://github.com/osumionline/ticketbaiws/blob/main/docs/webhooks.md)
+- [Documento de representación Verifactu](https://github.com/osumionline/ticketbaiws/blob/main/docs/verifactu.md)
+- [BATUZ / LROE Bizkaia](https://github.com/osumionline/ticketbaiws/blob/main/docs/bizkaia/README.md)
 
-```text
-docs/README.md
-```
-
-La documentación está organizada por dominios:
-
-```text
-docs/
-├── README.md
-├── getting-started.md
-├── invoices.md
-├── validation.md
-├── companies.md
-├── licenses.md
-├── webhooks.md
-├── verifactu.md
-└── bizkaia/
-    ├── README.md
-    ├── epigraphs.md
-    ├── received-invoices.md
-    ├── cash-collections.md
-    └── cash-payments.md
-```
+La carpeta `docs/` se mantiene en el repositorio y no forma parte del paquete publicado en npm.
 
 ## Compatibilidad
 
