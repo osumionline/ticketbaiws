@@ -2,6 +2,7 @@ import TicketBaiWsConfigurationError from '../errors/ticketbaiws-configuration-e
 import type TicketBaiWsClientOptions from '../model/common/ticketbaiws-client-options.model.js';
 import TicketBaiWsCompaniesResource from '../resources/companies.resource.js';
 import TicketBaiWsInvoicesResource from '../resources/invoices.resource.js';
+import TicketBaiWsLicensesResource from '../resources/licenses.resource.js';
 import TicketBaiWsSystemResource from '../resources/system.resource.js';
 import TicketBaiWsValidationResource from '../resources/validation.resource.js';
 import TicketBaiWsHttpClient from './ticketbaiws-http-client.js';
@@ -12,6 +13,7 @@ class TicketBaiWsClient {
   readonly system: TicketBaiWsSystemResource;
   readonly validation: TicketBaiWsValidationResource;
   readonly companies: TicketBaiWsCompaniesResource;
+  readonly licenses: TicketBaiWsLicensesResource;
 
   constructor(options: TicketBaiWsClientOptions) {
     if (typeof options !== 'object' || options === null) {
@@ -69,6 +71,7 @@ class TicketBaiWsClient {
     this.system = new TicketBaiWsSystemResource(httpClient);
     this.validation = new TicketBaiWsValidationResource(httpClient);
     this.companies = new TicketBaiWsCompaniesResource(httpClient);
+    this.licenses = new TicketBaiWsLicensesResource(httpClient);
   }
 }
 

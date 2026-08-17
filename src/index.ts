@@ -104,3 +104,13 @@ export type {
   TicketBaiWsListCompaniesResponse,
   TicketBaiWsUpdateCompanyRequest,
 } from './model/company/ticketbaiws-company.model.js';
+
+export type {
+  TicketBaiWsCreateLicenseRequest,
+  TicketBaiWsCreateLicenseResponse,
+  TicketBaiWsCreateLicenseResult,
+  TicketBaiWsLicense,
+  TicketBaiWsLicenseModality,
+  TicketBaiWsListLicensesRequest,
+  TicketBaiWsListLicensesResponse,
+} from './model/license/ticketbaiws-license.model.js';
