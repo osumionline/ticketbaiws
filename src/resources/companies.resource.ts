@@ -11,6 +11,12 @@ import type {
 class TicketBaiWsCompaniesResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates a company in TicketBaiWS.
+   *
+   * @param company Company data to register.
+   * @returns The created company response.
+   */
   async create(
     company: TicketBaiWsCreateCompanyRequest,
   ): Promise<TicketBaiWsCompanyResponse> {
@@ -19,6 +25,15 @@ class TicketBaiWsCompaniesResource {
     });
   }
 
+  /**
+   * Updates an existing company.
+   *
+   * Only the fields included in the request are modified.
+   *
+   * @param nif Tax identifier of the company to update.
+   * @param company Company fields to modify.
+   * @returns The updated company response.
+   */
   async update(
     nif: string,
     company: TicketBaiWsUpdateCompanyRequest,
@@ -32,6 +47,12 @@ class TicketBaiWsCompaniesResource {
     );
   }
 
+  /**
+   * Lists companies available to the current TicketBaiWS account.
+   *
+   * @param filters Optional filters such as license ID or tax identifier.
+   * @returns The company list response.
+   */
   async list(
     filters: TicketBaiWsListCompaniesRequest = {},
   ): Promise<TicketBaiWsListCompaniesResponse> {

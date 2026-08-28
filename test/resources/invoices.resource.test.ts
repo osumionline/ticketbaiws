@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import TicketBaiWsHttpClient from '../../src/client/ticketbaiws-http-client.js';
+
 import type TicketBaiWsCreateInvoiceRequest from '../../src/model/invoice/ticketbaiws-create-invoice-request.model.js';
+
 import TicketBaiWsInvoicesResource from '../../src/resources/invoices.resource.js';
 
 const invoice: TicketBaiWsCreateInvoiceRequest = {
@@ -60,6 +63,8 @@ describe('TicketBaiWsInvoicesResource', (): void => {
 
     expect(result).toEqual(apiResponse);
 
+    expect(result.result).toBe('OK');
+
     expect(fetchImplementation).toHaveBeenCalledOnce();
 
     const [input, init] = fetchImplementation.mock.calls[0] ?? [];
@@ -73,6 +78,47 @@ describe('TicketBaiWsInvoicesResource', (): void => {
     const headers = new Headers(init?.headers);
 
     expect(headers.get('Content-Type')).toBe('application/json');
+  });
+
+  it('accepts PENDING when creating a TicketBAI invoice', async (): Promise<void> => {
+    const apiResponse = {
+      result: 'PENDING',
+      return: {
+        huella_tbai: 'TBAI-B01000012-170826-pending',
+        qr: 'base64-qr-pending',
+        url: 'https://example.com/ticketbai/pending',
+      },
+      msg: null,
+    };
+
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(JSON.stringify(apiResponse), {
+          status: 200,
+        }),
+      );
+
+    const httpClient = new TicketBaiWsHttpClient(
+      'https://api-test.ticketbaiws.eus/',
+      'test-token',
+      '00000014Z',
+      fetchImplementation,
+    );
+
+    const resource = new TicketBaiWsInvoicesResource(httpClient);
+
+    const result = await resource.create(invoice);
+
+    expect(result).toEqual(apiResponse);
+
+    expect(result.result).toBe('PENDING');
+
+    expect(result.return).toEqual({
+      huella_tbai: 'TBAI-B01000012-170826-pending',
+      qr: 'base64-qr-pending',
+      url: 'https://example.com/ticketbai/pending',
+    });
   });
 
   it('creates a Verifactu invoice', async (): Promise<void> => {
@@ -112,5 +158,99 @@ describe('TicketBaiWsInvoicesResource', (): void => {
       qr: 'base64-qr',
       url: 'https://example.com/verifactu',
     });
+  });
+
+  it.each([true, false])(
+    'serializes sincrono=%s',
+    async (sincrono: boolean): Promise<void> => {
+      const request: TicketBaiWsCreateInvoiceRequest = {
+        ...invoice,
+        sincrono,
+      };
+
+      const apiResponse = {
+        result: 'OK',
+        return: {
+          huella_tbai: 'TBAI-B01000012-170826-sync',
+          qr: 'base64-qr',
+          url: 'https://example.com/ticketbai',
+        },
+        msg: null,
+      };
+
+      const fetchImplementation = vi
+        .fn<typeof globalThis.fetch>()
+        .mockResolvedValue(
+          new Response(JSON.stringify(apiResponse), {
+            status: 200,
+          }),
+        );
+
+      const httpClient = new TicketBaiWsHttpClient(
+        'https://api-test.ticketbaiws.eus/',
+        'test-token',
+        '00000014Z',
+        fetchImplementation,
+      );
+
+      const resource = new TicketBaiWsInvoicesResource(httpClient);
+
+      await resource.create(request);
+
+      const [, init] = fetchImplementation.mock.calls[0] ?? [];
+
+      expect(init?.body).toBe(JSON.stringify(request));
+
+      if (typeof init?.body !== 'string') {
+        throw new Error('Expected a JSON request body.');
+      }
+
+      const body = JSON.parse(init.body) as Record<string, unknown>;
+
+      expect(body['sincrono']).toBe(sincrono);
+    },
+  );
+
+  it('does not add sincrono when it is omitted', async (): Promise<void> => {
+    const apiResponse = {
+      result: 'PENDING',
+      return: {
+        huella_tbai: 'TBAI-B01000012-170826-async',
+        qr: 'base64-qr',
+        url: 'https://example.com/ticketbai',
+      },
+      msg: null,
+    };
+
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(JSON.stringify(apiResponse), {
+          status: 200,
+        }),
+      );
+
+    const httpClient = new TicketBaiWsHttpClient(
+      'https://api-test.ticketbaiws.eus/',
+      'test-token',
+      '00000014Z',
+      fetchImplementation,
+    );
+
+    const resource = new TicketBaiWsInvoicesResource(httpClient);
+
+    const result = await resource.create(invoice);
+
+    expect(result.result).toBe('PENDING');
+
+    const [, init] = fetchImplementation.mock.calls[0] ?? [];
+
+    if (typeof init?.body !== 'string') {
+      throw new Error('Expected a JSON request body.');
+    }
+
+    const body = JSON.parse(init.body) as Record<string, unknown>;
+
+    expect(body).not.toHaveProperty('sincrono');
   });
 });

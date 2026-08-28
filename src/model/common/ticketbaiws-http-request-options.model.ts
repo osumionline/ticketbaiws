@@ -4,4 +4,5 @@ export default interface TicketBaiWsHttpRequestOptions {
   readonly query?: TicketBaiWsQueryParams;
   readonly json?: unknown;
   readonly body?: BodyInit;
+  readonly allowPending?: boolean;
 }

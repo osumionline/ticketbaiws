@@ -386,6 +386,80 @@ describe('TicketBaiWsHttpClient', (): void => {
     }
   });
 
+  it('accepts a PENDING response when explicitly allowed', async (): Promise<void> => {
+    const apiResponse = {
+      result: 'PENDING',
+      return: {
+        huella_tbai: 'HUELLA',
+        qr: 'QR',
+        url: 'URL',
+      },
+      msg: null,
+    };
+
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(JSON.stringify(apiResponse), {
+          status: 200,
+        }),
+      );
+
+    const client = new TicketBaiWsHttpClient(
+      'https://api-test.ticketbaiws.eus/',
+      'test-token',
+      '00000014Z',
+      fetchImplementation,
+    );
+
+    const result = await client.request('POST', 'tbai/', {
+      allowPending: true,
+    });
+
+    expect(result).toEqual(apiResponse);
+  });
+
+  it('throws a response error for PENDING when it is not explicitly allowed', async (): Promise<void> => {
+    const apiResponse = {
+      result: 'PENDING',
+      return: {
+        huella_tbai: 'HUELLA',
+        qr: 'QR',
+        url: 'URL',
+      },
+      msg: null,
+    };
+
+    const fetchImplementation = vi
+      .fn<typeof globalThis.fetch>()
+      .mockResolvedValue(
+        new Response(JSON.stringify(apiResponse), {
+          status: 200,
+        }),
+      );
+
+    const client = new TicketBaiWsHttpClient(
+      'https://api-test.ticketbaiws.eus/',
+      'test-token',
+      '00000014Z',
+      fetchImplementation,
+    );
+
+    try {
+      await client.request('POST', 'tbai/');
+
+      expect.unreachable();
+    } catch (error: unknown) {
+      expect(error).toBeInstanceOf(TicketBaiWsResponseError);
+
+      if (error instanceof TicketBaiWsResponseError) {
+        expect(error.message).toBe(
+          'TicketBaiWS returned an unexpected PENDING response.',
+        );
+      }
+    }
+  });
+
   it.each([
     ['a primitive response', 'invalid'],
     ['an array response', []],

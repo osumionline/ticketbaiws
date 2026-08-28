@@ -91,6 +91,10 @@ Incluye operaciones para:
 - Descargar PDF.
 - Obtener FacturaE.
 
+Los envíos de factura pueden procesarse de forma asíncrona. En ese caso, `create()` puede devolver `result: 'PENDING'` como respuesta válida, conservando la huella fiscal, el QR y la URL de verificación cuando TicketBaiWS los proporciona.
+
+El request de creación admite `sincrono?: boolean` para solicitar procesamiento síncrono cuando proceda.
+
 ### Validaciones
 
 - Validación de NIF mediante AEAT.

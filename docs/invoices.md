@@ -26,6 +26,7 @@ y permite crear, consultar, listar, completar, anular y reenviar facturas, adem�
   - [Intracomunitarias y exportaciones](#intracomunitarias-y-exportaciones)
   - [Otros parámetros](#otros-parámetros)
   - [Subsanación con `zuzendu`](#subsanación-con-zuzendu)
+  - [Procesamiento asíncrono y `sincrono`](#procesamiento-asíncrono-y-sincrono)
   - [Respuesta TicketBAI y Verifactu](#respuesta-ticketbai-y-verifactu)
 - [Completar facturas simplificadas](#completar-facturas-simplificadas)
 - [Consultar una factura](#consultar-una-factura)
@@ -519,6 +520,7 @@ readonly emitida_terceros?: TicketBaiWsThirdPartyIssue;
 readonly modo_recargo_equivalencia?: boolean;
 readonly modo_regimen_simplificado?: boolean;
 readonly epigrafe?: string;
+readonly sincrono?: boolean;
 ```
 
 ## Causa de exención
@@ -614,6 +616,144 @@ El SDK no intenta comparar el nuevo objeto con la factura original; el servicio 
 
 ---
 
+# Procesamiento asíncrono y `sincrono`
+
+TicketBaiWS realiza por defecto los envíos TicketBAI de forma asíncrona.
+
+Esto significa que `client.invoices.create()` puede devolver una respuesta válida con:
+
+```ts
+result: 'PENDING'
+```
+
+antes de que la diputación haya terminado de procesar el envío.
+
+Ejemplo:
+
+```ts
+const response = await client.invoices.create({
+    fecha: '28/08/2026',
+    hora: '14:30:00',
+
+    simplificada: true,
+
+    serie: 'TPV01',
+    numero: '000123',
+
+    rectificativa: false,
+    retencion: 0,
+
+    lineas: [
+        {
+            descripcion: 'Venta mostrador',
+            cantidad: 1,
+            importe_unitario: 10,
+            tipo_iva: 21,
+            tipo_req: 0
+        }
+    ],
+
+    total_factura: 12.1
+});
+
+if (response.result === 'PENDING') {
+    console.log('Procesamiento remoto pendiente');
+}
+```
+
+`PENDING` **no es un error**.
+
+La respuesta sigue siendo válida y, cuando TicketBaiWS los proporciona, puede incluir ya:
+
+```text
+huella fiscal
+QR
+URL de verificación
+```
+
+Estos datos se generan antes del envío remoto y pueden utilizarse para generar o imprimir el documento fiscal.
+
+## Evolución posterior del estado
+
+Después de una respuesta:
+
+```text
+PENDING
+```
+
+el estado remoto puede evolucionar posteriormente a:
+
+```text
+OK
+ERROR
+```
+
+La aplicación puede comprobarlo mediante:
+
+```ts
+client.invoices.get(...)
+```
+
+o mediante los mecanismos de consulta/listado y webhooks ofrecidos por TicketBaiWS.
+
+Ejemplo:
+
+```ts
+const created = await client.invoices.create(invoice);
+
+if (created.result === 'PENDING') {
+    const current =
+        await client.invoices.get({
+            serie: invoice.serie,
+            numero: invoice.numero
+        });
+
+    console.log(current.return.status);
+}
+```
+
+El SDK no realiza polling automático ni espera a que el estado deje de ser `PENDING`.
+
+## Procesamiento síncrono
+
+El request de creación admite:
+
+```ts
+sincrono?: boolean;
+```
+
+Para solicitar procesamiento síncrono:
+
+```ts
+await client.invoices.create({
+    // resto de datos de la factura...
+    sincrono: true
+});
+```
+
+Para solicitar explícitamente el comportamiento contrario:
+
+```ts
+await client.invoices.create({
+    // resto de datos de la factura...
+    sincrono: false
+});
+```
+
+Si se omite:
+
+```ts
+await client.invoices.create({
+    // sin propiedad sincrono
+});
+```
+
+el SDK no añade ningún valor artificial y deja que TicketBaiWS aplique su comportamiento por defecto.
+
+TicketBaiWS recomienda el modo asíncrono para funcionamiento normal porque permite responder más rápido y realizar reintentos automáticos en determinados errores de envío. El modo síncrono puede resultar útil durante desarrollo e integración.
+
+---
+
 # Respuesta TicketBAI y Verifactu
 
 `create()` devuelve:
@@ -622,7 +762,17 @@ El SDK no intenta comparar el nuevo objeto con la factura original; el servicio 
 TicketBaiWsCreateInvoiceResponse
 ```
 
-cuyo `return` es una unión:
+Su `result` está tipado como:
+
+```ts
+'OK' | 'PENDING'
+```
+
+Ambos valores representan respuestas válidas del método de creación.
+
+`ERROR` no forma parte del tipo devuelto al consumidor porque el cliente HTTP lo convierte en `TicketBaiWsApiError`.
+
+El `return` es una unión:
 
 ```ts
 type TicketBaiWsCreateInvoiceResult =
@@ -655,6 +805,22 @@ Ejemplo conceptual:
 ```
 
 `qr` contiene la imagen QR codificada en Base64.
+
+Una creación TicketBAI asíncrona también puede devolver:
+
+```ts
+{
+    result: 'PENDING',
+    return: {
+        huella_tbai: 'TBAI-...',
+        qr: 'iVBORw0KGgo...',
+        url: 'https://...'
+    },
+    msg: null
+}
+```
+
+La huella, el QR y la URL pueden utilizarse aunque el procesamiento remoto siga pendiente.
 
 ## Verifactu
 
@@ -1294,6 +1460,8 @@ import type {
     TicketBaiWsCreateInvoiceRequest,
     TicketBaiWsCreateInvoiceResponse,
     TicketBaiWsCreateInvoiceResult,
+    TicketBaiWsNonErrorResponse,
+    TicketBaiWsPendingResponse,
     TicketBaiWsDocumentType,
     TicketBaiWsExemptionCause,
     TicketBaiWsFacturaERequest,
@@ -1387,6 +1555,39 @@ Consulta [Primeros pasos](getting-started.md) para la jerarquía completa de err
 ---
 
 # Notas sobre la documentación oficial
+
+## `PENDING` frente a `OK | ERROR`
+
+La documentación general de TicketBaiWS indica actualmente que `result` siempre será:
+
+```text
+OK
+ERROR
+```
+
+Sin embargo, la FAQ oficial sobre envíos asíncronos y ejemplos actuales del servicio muestran también:
+
+```text
+PENDING
+```
+
+como resultado válido durante la creación de TicketBAI.
+
+La FAQ explica además que:
+
+- los envíos TicketBAI se realizan de forma asíncrona por defecto;
+- el estado inicial puede ser `PENDING`;
+- la huella TBAI, el QR y la URL ya son válidos durante ese estado;
+- `sincrono: true` permite solicitar procesamiento síncrono;
+- posteriormente el estado pasa a `OK` o `ERROR`.
+
+Por ello `@osumi/ticketbaiws` acepta `PENDING` específicamente en:
+
+```ts
+client.invoices.create(...)
+```
+
+sin generalizarlo automáticamente al resto de endpoints.
 
 ## GET mediante query string
 

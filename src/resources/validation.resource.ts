@@ -11,6 +11,15 @@ import type {
 class TicketBaiWsValidationResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Validates a Spanish tax identifier against the AEAT census.
+   *
+   * For natural persons, the name may be required by TicketBaiWS to
+   * perform the identification.
+   *
+   * @param data Tax identifier and optional name to validate.
+   * @returns The AEAT validation response.
+   */
   async aeat(
     data: TicketBaiWsAeatValidationRequest,
   ): Promise<TicketBaiWsAeatValidationResponse> {
@@ -23,6 +32,12 @@ class TicketBaiWsValidationResource {
     );
   }
 
+  /**
+   * Validates a VAT identification number against the VIES service.
+   *
+   * @param data Tax identifier and country code to validate.
+   * @returns The VIES validation response.
+   */
   async vies(
     data: TicketBaiWsViesValidationRequest,
   ): Promise<TicketBaiWsViesValidationResponse> {

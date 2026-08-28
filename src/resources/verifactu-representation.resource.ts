@@ -11,6 +11,16 @@ import type {
 class TicketBaiWsVerifactuRepresentationResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Gets the representation document template for Verifactu.
+   *
+   * The generated PDF is returned by TicketBaiWS as a Base64-encoded
+   * string.
+   *
+   * @param data Optional representative information used to prefill
+   * the document.
+   * @returns The response containing the Base64-encoded PDF template.
+   */
   async getTemplate(
     data: TicketBaiWsRepresentationTemplateRequest = {},
   ): Promise<TicketBaiWsRepresentationPdfResponse> {
@@ -24,6 +34,15 @@ class TicketBaiWsVerifactuRepresentationResource {
     });
   }
 
+  /**
+   * Uploads a digitally signed Verifactu representation document.
+   *
+   * The document is sent as multipart form data using the provided
+   * `Blob`.
+   *
+   * @param data Signed PDF and optional filename to upload.
+   * @returns The TicketBaiWS document upload response.
+   */
   async upload(
     data: TicketBaiWsRepresentationUploadRequest,
   ): Promise<TicketBaiWsRepresentationUploadResponse> {
@@ -40,10 +59,25 @@ class TicketBaiWsVerifactuRepresentationResource {
     });
   }
 
+  /**
+   * Gets the stored Verifactu representation document.
+   *
+   * The document is returned by TicketBaiWS as a Base64-encoded string.
+   *
+   * @returns The response containing the stored Base64-encoded PDF.
+   */
   async get(): Promise<TicketBaiWsRepresentationPdfResponse> {
     return this.httpClient.request<string>('GET', 'doc-representante/');
   }
 
+  /**
+   * Revokes the stored Verifactu representation document.
+   *
+   * TicketBaiWS may reject the operation if the document has already
+   * been used for real submissions.
+   *
+   * @returns The TicketBaiWS revocation response.
+   */
   async revoke(): Promise<TicketBaiWsRepresentationRevokeResponse> {
     return this.httpClient.request<null>('DELETE', 'doc-representante/');
   }

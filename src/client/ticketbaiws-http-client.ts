@@ -6,6 +6,7 @@ import type TicketBaiWsHttpMethod from '../model/common/ticketbaiws-http-method.
 import type TicketBaiWsHttpRequestOptions from '../model/common/ticketbaiws-http-request-options.model.js';
 import type {
   TicketBaiWsErrorResponse,
+  TicketBaiWsNonErrorResponse,
   TicketBaiWsResponse,
   TicketBaiWsSuccessResponse,
 } from '../model/common/ticketbaiws-response.model.js';
@@ -21,10 +22,26 @@ class TicketBaiWsHttpClient {
   async request<T = unknown>(
     method: TicketBaiWsHttpMethod,
     resource: string,
+    options: TicketBaiWsHttpRequestOptions & {
+      readonly allowPending: true;
+    },
+  ): Promise<TicketBaiWsNonErrorResponse<T>>;
+
+  async request<T = unknown>(
+    method: TicketBaiWsHttpMethod,
+    resource: string,
+    options?: TicketBaiWsHttpRequestOptions,
+  ): Promise<TicketBaiWsSuccessResponse<T>>;
+
+  async request<T = unknown>(
+    method: TicketBaiWsHttpMethod,
+    resource: string,
     options: TicketBaiWsHttpRequestOptions = {},
-  ): Promise<TicketBaiWsSuccessResponse<T>> {
+  ): Promise<TicketBaiWsNonErrorResponse<T>> {
     const url: URL = this.createUrl(resource, options);
+
     const headers: Headers = this.createHeaders();
+
     const requestInit: RequestInit = {
       method,
       headers,
@@ -32,6 +49,7 @@ class TicketBaiWsHttpClient {
 
     if (options.json !== undefined) {
       headers.set('Content-Type', 'application/json');
+
       requestInit.body = JSON.stringify(options.json);
     } else if (options.body !== undefined) {
       requestInit.body = options.body;
@@ -45,7 +63,7 @@ class TicketBaiWsHttpClient {
       throw new TicketBaiWsNetworkError(cause);
     }
 
-    return this.processResponse<T>(response);
+    return this.processResponse<T>(response, options.allowPending === true);
   }
 
   private createUrl(
@@ -79,7 +97,8 @@ class TicketBaiWsHttpClient {
 
   private async processResponse<T>(
     response: Response,
-  ): Promise<TicketBaiWsSuccessResponse<T>> {
+    allowPending: boolean,
+  ): Promise<TicketBaiWsNonErrorResponse<T>> {
     let responseBody: string;
 
     try {
@@ -127,7 +146,14 @@ class TicketBaiWsHttpClient {
       throw new TicketBaiWsApiError(parsedResponse as TicketBaiWsErrorResponse);
     }
 
-    return parsedResponse as TicketBaiWsSuccessResponse<T>;
+    if (parsedResponse.result === 'PENDING' && !allowPending) {
+      throw new TicketBaiWsResponseError(
+        'TicketBaiWS returned an unexpected PENDING response.',
+        responseBody,
+      );
+    }
+
+    return parsedResponse as TicketBaiWsNonErrorResponse<T>;
   }
 
   private isTicketBaiWsResponse(
@@ -141,7 +167,9 @@ class TicketBaiWsHttpClient {
 
     if (
       !Object.hasOwn(response, 'result') ||
-      (response['result'] !== 'OK' && response['result'] !== 'ERROR')
+      (response['result'] !== 'OK' &&
+        response['result'] !== 'PENDING' &&
+        response['result'] !== 'ERROR')
     ) {
       return false;
     }

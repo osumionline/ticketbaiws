@@ -36,6 +36,18 @@ import type {
 class TicketBaiWsInvoicesResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates a TicketBAI or Verifactu invoice.
+   *
+   * TicketBaiWS processes invoice submissions asynchronously by default,
+   * so a valid response may have a result of `OK` or `PENDING`.
+   *
+   * When available, the response includes the fiscal fingerprint,
+   * QR code and verification URL even if processing is still pending.
+   *
+   * @param invoice Invoice data to submit.
+   * @returns The TicketBaiWS invoice creation response.
+   */
   async create(
     invoice: TicketBaiWsCreateInvoiceRequest,
   ): Promise<TicketBaiWsCreateInvoiceResponse> {
@@ -44,10 +56,18 @@ class TicketBaiWsInvoicesResource {
       'tbai/',
       {
         json: invoice,
+        allowPending: true,
       },
     );
   }
 
+  /**
+   * Completes one or more simplified invoices with customer information.
+   *
+   * @param invoice Data for the resulting complete invoice and the
+   * simplified invoices it replaces.
+   * @returns The TicketBaiWS response for the completed invoice.
+   */
   async completeSimplified(
     invoice: TicketBaiWsCompleteInvoiceRequest,
   ): Promise<TicketBaiWsCompleteInvoiceResponse> {
@@ -60,6 +80,12 @@ class TicketBaiWsInvoicesResource {
     );
   }
 
+  /**
+   * Gets the current processing status and fiscal information of an invoice.
+   *
+   * @param invoice Series and number identifying the invoice.
+   * @returns The TicketBaiWS invoice status response.
+   */
   async get(
     invoice: TicketBaiWsInvoiceReference,
   ): Promise<TicketBaiWsGetInvoiceResponse> {
@@ -75,6 +101,12 @@ class TicketBaiWsInvoicesResource {
     );
   }
 
+  /**
+   * Gets the request and response XML associated with an invoice.
+   *
+   * @param invoice Series and number identifying the invoice.
+   * @returns The XML documents associated with the invoice.
+   */
   async getXml(
     invoice: TicketBaiWsInvoiceReference,
   ): Promise<TicketBaiWsInvoiceXmlResponse> {
@@ -90,6 +122,14 @@ class TicketBaiWsInvoicesResource {
     );
   }
 
+  /**
+   * Gets the PDF representation of an invoice.
+   *
+   * The PDF is returned by TicketBaiWS as a Base64-encoded string.
+   *
+   * @param invoice Series and number identifying the invoice.
+   * @returns The TicketBaiWS response containing the Base64-encoded PDF.
+   */
   async getPdf(
     invoice: TicketBaiWsInvoiceReference,
   ): Promise<TicketBaiWsInvoicePdfResponse> {
@@ -101,6 +141,16 @@ class TicketBaiWsInvoicesResource {
     });
   }
 
+  /**
+   * Gets the FacturaE document associated with an invoice.
+   *
+   * The generated document is returned by TicketBaiWS as a
+   * Base64-encoded string.
+   *
+   * @param invoice Invoice reference and optional DIR3 codes.
+   * @returns The TicketBaiWS response containing the Base64-encoded
+   * FacturaE document.
+   */
   async getFacturaE(
     invoice: TicketBaiWsFacturaERequest,
   ): Promise<TicketBaiWsFacturaEResponse> {
@@ -115,6 +165,14 @@ class TicketBaiWsInvoicesResource {
     });
   }
 
+  /**
+   * Lists invoices matching the provided filters.
+   *
+   * Results are paginated by TicketBaiWS.
+   *
+   * @param filters Date range and optional filters used to query invoices.
+   * @returns The paginated TicketBaiWS invoice list response.
+   */
   async list(
     filters: TicketBaiWsListInvoicesRequest,
   ): Promise<TicketBaiWsListInvoicesResponse> {
@@ -135,6 +193,12 @@ class TicketBaiWsInvoicesResource {
     return response as TicketBaiWsListInvoicesResponse;
   }
 
+  /**
+   * Cancels an existing invoice.
+   *
+   * @param invoice Data identifying the invoice to cancel.
+   * @returns The TicketBaiWS cancellation response.
+   */
   async cancel(
     invoice: TicketBaiWsCancelInvoiceRequest,
   ): Promise<TicketBaiWsCancelInvoiceResponse> {
@@ -147,6 +211,15 @@ class TicketBaiWsInvoicesResource {
     );
   }
 
+  /**
+   * Requests TicketBaiWS to resend an existing invoice.
+   *
+   * This operation requeues the stored invoice for processing without
+   * recreating or modifying its fiscal data.
+   *
+   * @param invoice Series and number identifying the invoice.
+   * @returns The TicketBaiWS resend response.
+   */
   async resend(
     invoice: TicketBaiWsInvoiceReference,
   ): Promise<TicketBaiWsResendInvoiceResponse> {

@@ -11,6 +11,12 @@ import type {
 class TicketBaiWsLicensesResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates one or more TicketBaiWS licenses.
+   *
+   * @param license License plan, quantity, duration and billing modality.
+   * @returns The response containing the created license identifiers.
+   */
   async create(
     license: TicketBaiWsCreateLicenseRequest,
   ): Promise<TicketBaiWsCreateLicenseResponse> {
@@ -23,6 +29,12 @@ class TicketBaiWsLicensesResource {
     );
   }
 
+  /**
+   * Lists TicketBaiWS licenses associated with the current account.
+   *
+   * @param filters Optional filters used to query a specific license.
+   * @returns The license list response.
+   */
   async list(
     filters: TicketBaiWsListLicensesRequest = {},
   ): Promise<TicketBaiWsListLicensesResponse> {

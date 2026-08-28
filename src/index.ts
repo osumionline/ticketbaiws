@@ -13,6 +13,8 @@ export type { default as TicketBaiWsEnvironment } from './model/common/ticketbai
 
 export type {
   TicketBaiWsErrorResponse,
+  TicketBaiWsNonErrorResponse,
+  TicketBaiWsPendingResponse,
   TicketBaiWsResponse,
   TicketBaiWsResult,
   TicketBaiWsSuccessResponse,

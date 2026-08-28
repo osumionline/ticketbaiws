@@ -8,6 +8,11 @@ import type {
 class TicketBaiWsBizkaiaEpigraphsResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Lists the IAE epigraphs available for BATUZ/LROE Bizkaia.
+   *
+   * @returns The TicketBaiWS epigraph list response.
+   */
   async list(): Promise<TicketBaiWsListEpigraphsResponse> {
     return this.httpClient.request<readonly TicketBaiWsEpigraph[]>(
       'GET',

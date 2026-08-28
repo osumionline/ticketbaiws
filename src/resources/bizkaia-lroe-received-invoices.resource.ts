@@ -1,18 +1,26 @@
 import TicketBaiWsHttpClient from '../client/ticketbaiws-http-client.js';
 import type {
-  TicketBaiWsCreateLroeReceivedInvoicesRequest,
-  TicketBaiWsLroeReceivedInvoicesMutationResponse,
-  TicketBaiWsLroeReceivedInvoicesMutationResult,
-  TicketBaiWsUpdateLroeReceivedInvoicesRequest,
   TicketBaiWsCancelLroeReceivedInvoicesRequest,
+  TicketBaiWsCreateLroeReceivedInvoicesRequest,
   TicketBaiWsListLroeReceivedInvoicesRequest,
   TicketBaiWsListLroeReceivedInvoicesResponse,
   TicketBaiWsListLroeReceivedInvoicesResult,
+  TicketBaiWsLroeReceivedInvoicesMutationResponse,
+  TicketBaiWsLroeReceivedInvoicesMutationResult,
+  TicketBaiWsUpdateLroeReceivedInvoicesRequest,
 } from '../model/bizkaia/ticketbaiws-lroe-received-invoice.model.js';
 
 class TicketBaiWsBizkaiaLroeReceivedInvoicesResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates received-invoice records in the Bizkaia LROE.
+   *
+   * Multiple invoices can be submitted in a single batch.
+   *
+   * @param data Fiscal year and received invoices to submit.
+   * @returns The batch processing response for the submitted invoices.
+   */
   async create(
     data: TicketBaiWsCreateLroeReceivedInvoicesRequest,
   ): Promise<TicketBaiWsLroeReceivedInvoicesMutationResponse> {
@@ -25,6 +33,12 @@ class TicketBaiWsBizkaiaLroeReceivedInvoicesResource {
     );
   }
 
+  /**
+   * Updates existing received-invoice records in the Bizkaia LROE.
+   *
+   * @param data Fiscal year and received invoices to update.
+   * @returns The batch processing response for the updated invoices.
+   */
   async update(
     data: TicketBaiWsUpdateLroeReceivedInvoicesRequest,
   ): Promise<TicketBaiWsLroeReceivedInvoicesMutationResponse> {
@@ -37,6 +51,15 @@ class TicketBaiWsBizkaiaLroeReceivedInvoicesResource {
     );
   }
 
+  /**
+   * Lists received-invoice records from the Bizkaia LROE.
+   *
+   * Monetary and tax values returned by TicketBaiWS may be represented
+   * as strings even when their write models use numbers.
+   *
+   * @param filters Fiscal year and optional query filters.
+   * @returns The received-invoice query response.
+   */
   async list(
     filters: TicketBaiWsListLroeReceivedInvoicesRequest,
   ): Promise<TicketBaiWsListLroeReceivedInvoicesResponse> {
@@ -62,6 +85,12 @@ class TicketBaiWsBizkaiaLroeReceivedInvoicesResource {
     );
   }
 
+  /**
+   * Cancels received-invoice records in the Bizkaia LROE.
+   *
+   * @param data Fiscal year and invoices to cancel.
+   * @returns The batch processing response for the cancelled invoices.
+   */
   async cancel(
     data: TicketBaiWsCancelLroeReceivedInvoicesRequest,
   ): Promise<TicketBaiWsLroeReceivedInvoicesMutationResponse> {

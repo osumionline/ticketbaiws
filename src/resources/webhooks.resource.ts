@@ -12,6 +12,12 @@ import type {
 class TicketBaiWsWebhooksResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates a TicketBaiWS webhook configuration.
+   *
+   * @param webhook Webhook URL, secret and notification settings.
+   * @returns The created webhook response.
+   */
   async create(
     webhook: TicketBaiWsWebhookRequest,
   ): Promise<TicketBaiWsWebhookResponse> {
@@ -20,6 +26,13 @@ class TicketBaiWsWebhooksResource {
     });
   }
 
+  /**
+   * Updates an existing TicketBaiWS webhook.
+   *
+   * @param code Webhook code identifying the configuration to update.
+   * @param webhook Updated webhook configuration.
+   * @returns The updated webhook response.
+   */
   async update(
     code: string,
     webhook: TicketBaiWsWebhookRequest,
@@ -33,6 +46,16 @@ class TicketBaiWsWebhooksResource {
     );
   }
 
+  /**
+   * Gets a webhook configuration by its code.
+   *
+   * TicketBaiWS documentation is ambiguous about whether this endpoint
+   * returns a single webhook or an array, so the SDK preserves both
+   * possible response shapes.
+   *
+   * @param code Webhook code identifying the configuration.
+   * @returns The webhook configuration response.
+   */
   async get(code: string): Promise<TicketBaiWsGetWebhookResponse> {
     return this.httpClient.request<TicketBaiWsGetWebhookResult>(
       'GET',
@@ -40,6 +63,12 @@ class TicketBaiWsWebhooksResource {
     );
   }
 
+  /**
+   * Lists webhook configurations available to the current account.
+   *
+   * @param filters Optional filters for active or error-only webhooks.
+   * @returns The webhook list response.
+   */
   async list(
     filters: TicketBaiWsListWebhooksRequest = {},
   ): Promise<TicketBaiWsListWebhooksResponse> {

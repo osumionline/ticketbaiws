@@ -12,6 +12,15 @@ import type {
 class TicketBaiWsBizkaiaLroeCashCollectionsResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates cash-collection records in the Bizkaia LROE.
+   *
+   * The batch may contain operations with or without an associated
+   * invoice.
+   *
+   * @param data Fiscal year and cash collections to submit.
+   * @returns The batch processing response for the submitted collections.
+   */
   async create(
     data: TicketBaiWsMutateLroeCashCollectionsRequest,
   ): Promise<TicketBaiWsLroeCashCollectionsMutationResponse> {
@@ -24,6 +33,12 @@ class TicketBaiWsBizkaiaLroeCashCollectionsResource {
     );
   }
 
+  /**
+   * Updates cash-collection records in the Bizkaia LROE.
+   *
+   * @param data Fiscal year and cash collections to update.
+   * @returns The batch processing response for the updated collections.
+   */
   async update(
     data: TicketBaiWsMutateLroeCashCollectionsRequest,
   ): Promise<TicketBaiWsLroeCashCollectionsMutationResponse> {
@@ -36,6 +51,15 @@ class TicketBaiWsBizkaiaLroeCashCollectionsResource {
     );
   }
 
+  /**
+   * Lists cash-collection records from the Bizkaia LROE.
+   *
+   * Monetary values returned by TicketBaiWS may be represented as
+   * strings even when their write models use numbers.
+   *
+   * @param filters Fiscal year and optional query filters.
+   * @returns The cash-collection query response.
+   */
   async list(
     filters: TicketBaiWsListLroeCashCollectionsRequest,
   ): Promise<TicketBaiWsListLroeCashCollectionsResponse> {
@@ -61,6 +85,12 @@ class TicketBaiWsBizkaiaLroeCashCollectionsResource {
     );
   }
 
+  /**
+   * Cancels cash-collection records in the Bizkaia LROE.
+   *
+   * @param data Fiscal year and cash collections to cancel.
+   * @returns The batch processing response for the cancelled collections.
+   */
   async cancel(
     data: TicketBaiWsCancelLroeCashCollectionsRequest,
   ): Promise<TicketBaiWsLroeCashCollectionsMutationResponse> {

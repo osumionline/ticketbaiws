@@ -218,15 +218,21 @@ TicketBaiWS utiliza normalmente un sobre de respuesta con esta forma:
 
 ```ts
 interface TicketBaiWsResponse<T> {
-    readonly result: 'OK' | 'ERROR';
+    readonly result: 'OK' | 'PENDING' | 'ERROR';
     readonly return: T;
     readonly msg: string | null;
 }
 ```
 
-Cuando una llamada termina correctamente, los métodos públicos devuelven una respuesta tipada cuyo `result` es `'OK'`.
+El SDK reconoce los tres resultados, pero `PENDING` solo se acepta en los endpoints en los que se ha habilitado expresamente según el comportamiento documentado de TicketBaiWS.
 
-Ejemplo:
+La mayoría de métodos devuelven únicamente respuestas correctas con:
+
+```ts
+result: 'OK'
+```
+
+Por ejemplo:
 
 ```ts
 const response = await client.validation.aeat({
@@ -234,10 +240,32 @@ const response = await client.validation.aeat({
     nombre: 'Nombre Apellidos'
 });
 
-if (response.result === 'OK') {
-    console.log(response.return.resultado);
-}
+console.log(response.return.resultado);
 ```
+
+La creación de facturas mediante:
+
+```ts
+client.invoices.create(...)
+```
+
+puede devolver:
+
+```ts
+result: 'OK' | 'PENDING'
+```
+
+`PENDING` es una respuesta válida y no genera `TicketBaiWsApiError`. Indica que TicketBaiWS ha creado el documento pero el procesamiento remoto continúa pendiente.
+
+Las respuestas con:
+
+```ts
+result: 'ERROR'
+```
+
+se convierten en `TicketBaiWsApiError`.
+
+Un valor de `result` desconocido, o un `PENDING` recibido en un endpoint que no lo admite, produce `TicketBaiWsResponseError`.
 
 El contenido de `return` depende de cada endpoint.
 

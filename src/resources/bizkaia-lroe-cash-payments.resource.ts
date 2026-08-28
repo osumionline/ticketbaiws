@@ -12,6 +12,15 @@ import type {
 class TicketBaiWsBizkaiaLroeCashPaymentsResource {
   constructor(private readonly httpClient: TicketBaiWsHttpClient) {}
 
+  /**
+   * Creates cash-payment records in the Bizkaia LROE.
+   *
+   * The batch may contain operations with or without an associated
+   * invoice.
+   *
+   * @param data Fiscal year and cash payments to submit.
+   * @returns The batch processing response for the submitted payments.
+   */
   async create(
     data: TicketBaiWsMutateLroeCashPaymentsRequest,
   ): Promise<TicketBaiWsLroeCashPaymentsMutationResponse> {
@@ -24,6 +33,12 @@ class TicketBaiWsBizkaiaLroeCashPaymentsResource {
     );
   }
 
+  /**
+   * Updates cash-payment records in the Bizkaia LROE.
+   *
+   * @param data Fiscal year and cash payments to update.
+   * @returns The batch processing response for the updated payments.
+   */
   async update(
     data: TicketBaiWsMutateLroeCashPaymentsRequest,
   ): Promise<TicketBaiWsLroeCashPaymentsMutationResponse> {
@@ -36,6 +51,15 @@ class TicketBaiWsBizkaiaLroeCashPaymentsResource {
     );
   }
 
+  /**
+   * Lists cash-payment records from the Bizkaia LROE.
+   *
+   * Monetary values returned by TicketBaiWS may be represented as
+   * strings even when their write models use numbers.
+   *
+   * @param filters Fiscal year and optional query filters.
+   * @returns The cash-payment query response.
+   */
   async list(
     filters: TicketBaiWsListLroeCashPaymentsRequest,
   ): Promise<TicketBaiWsListLroeCashPaymentsResponse> {
@@ -61,6 +85,12 @@ class TicketBaiWsBizkaiaLroeCashPaymentsResource {
     );
   }
 
+  /**
+   * Cancels cash-payment records in the Bizkaia LROE.
+   *
+   * @param data Fiscal year and cash payments to cancel.
+   * @returns The batch processing response for the cancelled payments.
+   */
   async cancel(
     data: TicketBaiWsCancelLroeCashPaymentsRequest,
   ): Promise<TicketBaiWsLroeCashPaymentsMutationResponse> {

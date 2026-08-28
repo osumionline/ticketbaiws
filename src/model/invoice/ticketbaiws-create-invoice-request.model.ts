@@ -41,6 +41,7 @@ export default interface TicketBaiWsCreateInvoiceRequest {
   readonly total_factura: number;
 
   readonly zuzendu?: boolean;
+  readonly sincrono?: boolean;
 
   readonly regimen_iva?: number;
   readonly causa_exencion?: TicketBaiWsExemptionCause;

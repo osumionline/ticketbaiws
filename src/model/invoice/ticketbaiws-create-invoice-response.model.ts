@@ -1,4 +1,4 @@
-import type { TicketBaiWsSuccessResponse } from '../common/ticketbaiws-response.model.js';
+import type { TicketBaiWsNonErrorResponse } from '../common/ticketbaiws-response.model.js';
 
 interface TicketBaiWsTicketBaiInvoiceResult {
   readonly huella_tbai: string;
@@ -17,7 +17,7 @@ type TicketBaiWsCreateInvoiceResult =
   | TicketBaiWsVerifactuInvoiceResult;
 
 type TicketBaiWsCreateInvoiceResponse =
-  TicketBaiWsSuccessResponse<TicketBaiWsCreateInvoiceResult>;
+  TicketBaiWsNonErrorResponse<TicketBaiWsCreateInvoiceResult>;
 
 export type {
   TicketBaiWsCreateInvoiceResponse,
