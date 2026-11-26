@@ -27,9 +27,7 @@ interface TicketBaiWsListWebhooksRequest {
 type TicketBaiWsWebhookResponse =
   TicketBaiWsSuccessResponse<TicketBaiWsWebhook>;
 
-type TicketBaiWsGetWebhookResult =
-  | TicketBaiWsWebhook
-  | readonly TicketBaiWsWebhook[];
+type TicketBaiWsGetWebhookResult = TicketBaiWsWebhook;
 
 type TicketBaiWsGetWebhookResponse =
   TicketBaiWsSuccessResponse<TicketBaiWsGetWebhookResult>;

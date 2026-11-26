@@ -47,14 +47,13 @@ class TicketBaiWsWebhooksResource {
   }
 
   /**
-   * Gets a webhook configuration by its code.
+   * Gets a single webhook configuration by its code.
    *
-   * TicketBaiWS documentation is ambiguous about whether this endpoint
-   * returns a single webhook or an array, so the SDK preserves both
-   * possible response shapes.
+   * Unlike list(), which returns an array, this method returns
+   * one webhook configuration.
    *
    * @param code Webhook code identifying the configuration.
-   * @returns The webhook configuration response.
+   * @returns The individual webhook configuration response.
    */
   async get(code: string): Promise<TicketBaiWsGetWebhookResponse> {
     return this.httpClient.request<TicketBaiWsGetWebhookResult>(

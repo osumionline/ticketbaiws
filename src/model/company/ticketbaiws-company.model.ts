@@ -19,6 +19,12 @@ interface TicketBaiWsCompany {
   readonly token: string;
   readonly token_test: string;
   readonly autorenovacion?: boolean;
+
+  /**
+   * Whether SPFE B2B electronic invoicing is enabled
+   * for this company.
+   */
+  readonly spfe?: boolean;
 }
 
 interface TicketBaiWsCreateCompanyRequest {
@@ -34,6 +40,14 @@ interface TicketBaiWsCreateCompanyRequest {
   readonly web?: string;
   readonly diputacion: TicketBaiWsCompanyTaxAuthority;
   readonly epigrafe?: string;
+
+  /**
+   * Enables or disables SPFE B2B electronic invoicing
+   * when creating the company.
+   *
+   * Omit this property to use the API's default behavior.
+   */
+  readonly spfe?: boolean;
 }
 
 interface TicketBaiWsUpdateCompanyRequest {
@@ -47,6 +61,13 @@ interface TicketBaiWsUpdateCompanyRequest {
   readonly web?: string;
   readonly epigrafe?: string;
   readonly autorenovacion?: boolean;
+
+  /**
+   * Enables or disables SPFE B2B electronic invoicing.
+   *
+   * Omit this property to leave the current setting unchanged.
+   */
+  readonly spfe?: boolean;
 }
 
 interface TicketBaiWsListCompaniesRequest {
