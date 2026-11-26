@@ -118,6 +118,7 @@ class TicketBaiWsHttpClient {
         response.status,
         response.statusText,
         responseBody,
+        response.headers.get('Retry-After'),
       );
     }
 

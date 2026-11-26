@@ -4,8 +4,14 @@ class TicketBaiWsHttpError extends TicketBaiWsError {
   readonly status: number;
   readonly statusText: string;
   readonly responseBody: string;
+  readonly retryAfter: string | null;
 
-  constructor(status: number, statusText: string, responseBody: string) {
+  constructor(
+    status: number,
+    statusText: string,
+    responseBody: string,
+    retryAfter: string | null = null,
+  ) {
     const statusDescription: string =
       statusText.trim() === '' ? String(status) : `${status} ${statusText}`;
 
@@ -14,6 +20,7 @@ class TicketBaiWsHttpError extends TicketBaiWsError {
     this.status = status;
     this.statusText = statusText;
     this.responseBody = responseBody;
+    this.retryAfter = retryAfter;
   }
 }
 
