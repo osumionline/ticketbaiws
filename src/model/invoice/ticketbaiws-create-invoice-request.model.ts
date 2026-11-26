@@ -24,6 +24,20 @@ export default interface TicketBaiWsCreateInvoiceRequest {
   readonly direccion?: string;
   readonly cp?: string;
 
+  /**
+   * Customer town or city.
+   *
+   * Recommended for B2B electronic invoicing through SPFE.
+   */
+  readonly poblacion?: string;
+
+  /**
+   * Customer province.
+   *
+   * TicketBaiWS may infer it from the postal code for Spanish customers.
+   */
+  readonly provincia?: string;
+
   readonly serie: string;
   readonly numero: string;
 
@@ -39,6 +53,20 @@ export default interface TicketBaiWsCreateInvoiceRequest {
   readonly retencion: number;
   readonly lineas: readonly TicketBaiWsInvoiceLine[];
   readonly total_factura: number;
+
+  /**
+   * Bizkaia LROE 140 code explaining why the IRPF income
+   * differs from the VAT taxable base.
+   *
+   * Relevant to applicable operations from 2027.
+   */
+  readonly causa_ingreso_irpf?: string;
+
+  /**
+   * Income amount to be considered for IRPF purposes
+   * when it differs from the VAT taxable base.
+   */
+  readonly importe_ingreso_irpf?: number;
 
   readonly zuzendu?: boolean;
   readonly sincrono?: boolean;
