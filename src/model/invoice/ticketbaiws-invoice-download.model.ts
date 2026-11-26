@@ -8,12 +8,19 @@ interface TicketBaiWsFacturaERequest extends TicketBaiWsInvoiceReference {
 }
 
 interface TicketBaiWsInvoiceXmlResult {
+  readonly serie?: string;
+  readonly numero?: string;
   readonly xml_request: string;
-  readonly xml_response: string;
+  readonly xml_response: string | null;
+  readonly zuzendu?: number;
 }
 
+type TicketBaiWsInvoiceXmlData =
+  | TicketBaiWsInvoiceXmlResult
+  | readonly TicketBaiWsInvoiceXmlResult[];
+
 type TicketBaiWsInvoiceXmlResponse =
-  TicketBaiWsSuccessResponse<TicketBaiWsInvoiceXmlResult>;
+  TicketBaiWsSuccessResponse<TicketBaiWsInvoiceXmlData>;
 
 type TicketBaiWsInvoicePdfResponse = TicketBaiWsSuccessResponse<string>;
 
@@ -23,6 +30,7 @@ export type {
   TicketBaiWsFacturaERequest,
   TicketBaiWsFacturaEResponse,
   TicketBaiWsInvoicePdfResponse,
+  TicketBaiWsInvoiceXmlData,
   TicketBaiWsInvoiceXmlResponse,
   TicketBaiWsInvoiceXmlResult,
 };

@@ -83,6 +83,7 @@ export type {
   TicketBaiWsFacturaERequest,
   TicketBaiWsFacturaEResponse,
   TicketBaiWsInvoicePdfResponse,
+  TicketBaiWsInvoiceXmlData,
   TicketBaiWsInvoiceXmlResponse,
   TicketBaiWsInvoiceXmlResult,
 } from './model/invoice/ticketbaiws-invoice-download.model.js';

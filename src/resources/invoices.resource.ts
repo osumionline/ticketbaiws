@@ -20,8 +20,8 @@ import type {
   TicketBaiWsFacturaERequest,
   TicketBaiWsFacturaEResponse,
   TicketBaiWsInvoicePdfResponse,
+  TicketBaiWsInvoiceXmlData,
   TicketBaiWsInvoiceXmlResponse,
-  TicketBaiWsInvoiceXmlResult,
 } from '../model/invoice/ticketbaiws-invoice-download.model.js';
 import type {
   TicketBaiWsCancelInvoiceRequest,
@@ -104,13 +104,18 @@ class TicketBaiWsInvoicesResource {
   /**
    * Gets the request and response XML associated with an invoice.
    *
+   * The response contains a single record or an array of records
+   * when the invoice has Zuzendu corrections.
+   *
+   * XML documents are returned as plain text, not Base64.
+   *
    * @param invoice Series and number identifying the invoice.
    * @returns The XML documents associated with the invoice.
    */
   async getXml(
     invoice: TicketBaiWsInvoiceReference,
   ): Promise<TicketBaiWsInvoiceXmlResponse> {
-    return this.httpClient.request<TicketBaiWsInvoiceXmlResult>(
+    return this.httpClient.request<TicketBaiWsInvoiceXmlData>(
       'GET',
       'tbai-xml/',
       {
