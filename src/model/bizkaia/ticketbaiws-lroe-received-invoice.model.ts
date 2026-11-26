@@ -59,6 +59,22 @@ interface TicketBaiWsLroeReceivedInvoice {
   readonly descripcion: string;
   readonly importacion: boolean;
   readonly tipo_factura: TicketBaiWsLroeReceivedInvoiceType;
+
+  /**
+   * Indicates whether this is a simplified received invoice.
+   *
+   * When omitted, TicketBaiWS applies its default behavior.
+   */
+  readonly simplificada?: boolean;
+
+  /**
+   * Indicates whether this is an intra-community acquisition.
+   *
+   * Omit to use the API default; send false explicitly
+   * when the acquisition is not intra-community.
+   */
+  readonly intracomunitaria?: boolean;
+
   readonly importe_total: number;
   readonly bases: readonly TicketBaiWsLroeReceivedInvoiceBase[];
   readonly regimen_iva?: number;
@@ -100,6 +116,22 @@ interface TicketBaiWsLroeReceivedInvoiceUpdate {
   readonly descripcion: string;
   readonly importacion: boolean;
   readonly tipo_factura: TicketBaiWsLroeReceivedInvoiceType;
+
+  /**
+   * Indicates whether this is a simplified received invoice.
+   *
+   * When omitted, TicketBaiWS applies its default behavior.
+   */
+  readonly simplificada?: boolean;
+
+  /**
+   * Indicates whether this is an intra-community acquisition.
+   *
+   * Omit to use the API default; send false explicitly
+   * when the acquisition is not intra-community.
+   */
+  readonly intracomunitaria?: boolean;
+
   readonly importe_total: number;
   readonly bases: readonly TicketBaiWsLroeReceivedInvoiceUpdateBase[];
   readonly regimen_iva?: number;
