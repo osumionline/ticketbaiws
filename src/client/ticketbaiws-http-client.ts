@@ -182,7 +182,11 @@ class TicketBaiWsHttpClient {
       return false;
     }
 
-    return response['msg'] === null || typeof response['msg'] === 'string';
+    return (
+      response['msg'] === null ||
+      typeof response['msg'] === 'string' ||
+      Array.isArray(response['msg'])
+    );
   }
 }
 

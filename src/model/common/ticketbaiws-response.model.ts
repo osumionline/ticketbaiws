@@ -1,9 +1,11 @@
 type TicketBaiWsResult = 'OK' | 'PENDING' | 'ERROR';
 
+type TicketBaiWsMessage = string | readonly unknown[] | null;
+
 interface TicketBaiWsResponse<T = unknown> {
   readonly result: TicketBaiWsResult;
   readonly return: T;
-  readonly msg: string | null;
+  readonly msg: TicketBaiWsMessage;
   readonly [key: string]: unknown;
 }
 
@@ -29,6 +31,7 @@ interface TicketBaiWsErrorResponse extends TicketBaiWsResponse<unknown> {
 
 export type {
   TicketBaiWsErrorResponse,
+  TicketBaiWsMessage,
   TicketBaiWsNonErrorResponse,
   TicketBaiWsPendingResponse,
   TicketBaiWsResponse,
