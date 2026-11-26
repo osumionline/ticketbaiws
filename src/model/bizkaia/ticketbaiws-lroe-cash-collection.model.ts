@@ -21,6 +21,13 @@ type TicketBaiWsLroeCashCollectionsBatchStatus = 'OK' | 'ERROR';
 interface TicketBaiWsLroeCashCollectionBase {
   readonly epigrafe?: string;
   readonly fecha_cobro: string;
+  /**
+   * Date of the underlying operation in dd/mm/yyyy format.
+   *
+   * Optional for invoice-related collections.
+   * Required for collections without an invoice.
+   */
+  readonly fecha_operacion?: string;
   readonly importe_cobrado: number;
   readonly iva_devengado?: number;
   readonly ingreso_irpf?: number;
@@ -39,6 +46,10 @@ interface TicketBaiWsLroeCashCollectionWithoutInvoice extends TicketBaiWsLroeCas
   readonly tipo_operacion: 'sin_factura';
   readonly tipo_ingreso: TicketBaiWsLroeCashCollectionIncomeType;
   readonly linea: number;
+  /**
+   * Date of the operation without an associated invoice.
+   */
+  readonly fecha_operacion: string;
 }
 
 type TicketBaiWsLroeCashCollection =

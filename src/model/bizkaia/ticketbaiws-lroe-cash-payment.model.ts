@@ -1,4 +1,5 @@
 import type { TicketBaiWsSuccessResponse } from '../common/ticketbaiws-response.model.js';
+import type { TicketBaiWsDocumentType } from '../invoice/ticketbaiws-invoice.types.js';
 
 type TicketBaiWsLroeCashPaymentOperationType = 'con_factura' | 'sin_factura';
 
@@ -50,8 +51,22 @@ type TicketBaiWsLroeCashPaymentsBatchStatus = 'OK' | 'ERROR';
 interface TicketBaiWsLroeCashPaymentBase {
   readonly epigrafe?: string;
   readonly fecha_pago: string;
+  /**
+   * Date of the underlying operation in dd/mm/yyyy format.
+   *
+   * Optional for invoice-related payments.
+   * Required for payments without an invoice.
+   */
+  readonly fecha_operacion?: string;
   readonly nif: string;
   readonly pais?: string;
+  /**
+   * Identification document type for a foreign supplier.
+   *
+   * Uses the TicketBaiWS codes 02 through 06.
+   * When omitted, TicketBaiWS documents 02 as the default.
+   */
+  readonly tipo_documento?: TicketBaiWsDocumentType;
   readonly nombre_social: string;
   readonly importe_pagado: number;
   readonly iva_soportado?: number;
@@ -72,6 +87,10 @@ interface TicketBaiWsLroeCashPaymentWithoutInvoice extends TicketBaiWsLroeCashPa
   readonly tipo_operacion: 'sin_factura';
   readonly concepto: TicketBaiWsLroeCashPaymentConcept;
   readonly linea: number;
+  /**
+   * Date of the operation without an associated invoice.
+   */
+  readonly fecha_operacion: string;
 }
 
 type TicketBaiWsLroeCashPayment =
