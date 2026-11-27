@@ -4,6 +4,7 @@ import TicketBaiWsBizkaiaResource from '../resources/bizkaia.resource.js';
 import TicketBaiWsCompaniesResource from '../resources/companies.resource.js';
 import TicketBaiWsInvoicesResource from '../resources/invoices.resource.js';
 import TicketBaiWsLicensesResource from '../resources/licenses.resource.js';
+import TicketBaiWsSpfeResource from '../resources/spfe.resource.js';
 import TicketBaiWsSystemResource from '../resources/system.resource.js';
 import TicketBaiWsValidationResource from '../resources/validation.resource.js';
 import TicketBaiWsVerifactuResource from '../resources/verifactu.resource.js';
@@ -16,6 +17,7 @@ class TicketBaiWsClient {
   readonly companies: TicketBaiWsCompaniesResource;
   readonly invoices: TicketBaiWsInvoicesResource;
   readonly licenses: TicketBaiWsLicensesResource;
+  readonly spfe: TicketBaiWsSpfeResource;
   readonly system: TicketBaiWsSystemResource;
   readonly validation: TicketBaiWsValidationResource;
   readonly verifactu: TicketBaiWsVerifactuResource;
@@ -77,6 +79,7 @@ class TicketBaiWsClient {
     this.companies = new TicketBaiWsCompaniesResource(httpClient);
     this.invoices = new TicketBaiWsInvoicesResource(httpClient);
     this.licenses = new TicketBaiWsLicensesResource(httpClient);
+    this.spfe = new TicketBaiWsSpfeResource(httpClient);
     this.system = new TicketBaiWsSystemResource(httpClient);
     this.validation = new TicketBaiWsValidationResource(httpClient);
     this.verifactu = new TicketBaiWsVerifactuResource(httpClient);

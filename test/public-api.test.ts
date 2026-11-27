@@ -113,6 +113,10 @@ describe('@osumi/ticketbaiws public API', (): void => {
     expect(client.bizkaia.lroe.cashPayments.list).toBeTypeOf('function');
 
     expect(client.bizkaia.lroe.cashPayments.cancel).toBeTypeOf('function');
+
+    expect(client.spfe.statuses.create).toBeTypeOf('function');
+
+    expect(client.spfe.statuses.list).toBeTypeOf('function');
   });
 
   it('exposes the public error hierarchy', (): void => {

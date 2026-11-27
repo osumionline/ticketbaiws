@@ -251,3 +251,21 @@ export type {
   TicketBaiWsLroeExpenseWithoutInvoiceTerritory,
   TicketBaiWsMutateLroeExpensesWithoutInvoiceRequest,
 } from './model/bizkaia/ticketbaiws-lroe-expense-without-invoice.model.js';
+
+export type {
+  TicketBaiWsListSpfeStatusesRequest,
+  TicketBaiWsListSpfeStatusesResponse,
+  TicketBaiWsSpfeCollectionRequest,
+  TicketBaiWsSpfeIssuedInvoiceStatus,
+  TicketBaiWsSpfeNonPaymentRequest,
+  TicketBaiWsSpfePaymentRequest,
+  TicketBaiWsSpfeReceivedInvoiceStatus,
+  TicketBaiWsSpfeRejectionReason,
+  TicketBaiWsSpfeRejectionRequest,
+  TicketBaiWsSpfeStatusError,
+  TicketBaiWsSpfeStatusKind,
+  TicketBaiWsSpfeStatusRecord,
+  TicketBaiWsSpfeStatusRequest,
+  TicketBaiWsSpfeStatusResponse,
+  TicketBaiWsSpfeStatusResult,
+} from './model/spfe/ticketbaiws-spfe-status.model.js';
