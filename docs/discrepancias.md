@@ -247,7 +247,41 @@ https://ticketbaiws.eus/es/webhooks-put/
 
 ---
 
-## 4. Cuestiones históricas
+## 4. Clientes y productos de facturación
+
+### DISC-011 — Alias de campos en el alta de clientes
+
+**Estado:** Por verificar
+
+**Endpoint:** POST `/clientes/`
+
+El OpenAPI declara `nombre` como obligatorio mediante
+`required: ["nombre"]`, pero la descripción del campo indica
+que `nombre_social` es un alias.
+
+De igual manera, el campo `pais` documenta `pais_cliente`
+como alias, aunque no lo incluye como propiedad independiente
+en el esquema del request.
+
+**Consulta a Berein:** confirmar si el API admite un alta
+con `nombre_social` sin enviar `nombre`, y si se acepta
+`pais_cliente` en lugar de `pais`.
+
+En caso afirmativo, reflejar las alternativas de forma
+explícita en el OpenAPI.
+
+**SDK:** requiere `nombre` en el alta y utiliza `pais`
+en el DTO de escritura, siguiendo el esquema publicado.
+Los campos devueltos por el API se conservan íntegramente.
+
+**Fuente:**
+https://api.ticketbaiws.eus/openapi.json
+
+**Operación:** `POST /clientes/`
+
+---
+
+## 5. Cuestiones históricas
 
 Antes de la versión 1.0.1 del SDK ya se comunicó a Berein un
 informe con otras inconsistencias de documentación.
@@ -262,7 +296,7 @@ que siguen pendientes y que conviene insistir en ellas.
 
 ---
 
-## 5. Informe a Berein
+## 6. Informe a Berein
 
 Antes de publicar `@osumi/ticketbaiws` 1.1.0:
 

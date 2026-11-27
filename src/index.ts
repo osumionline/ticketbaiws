@@ -276,3 +276,13 @@ export type {
   TicketBaiWsSpfeReceivedInvoice,
   TicketBaiWsSpfeReceivedInvoiceState,
 } from './model/spfe/ticketbaiws-spfe-received-invoice.model.js';
+
+export type {
+  TicketBaiWsBillingCustomer,
+  TicketBaiWsBillingCustomerFields,
+  TicketBaiWsBillingCustomerResponse,
+  TicketBaiWsCreateBillingCustomerRequest,
+  TicketBaiWsListBillingCustomersRequest,
+  TicketBaiWsListBillingCustomersResponse,
+  TicketBaiWsUpdateBillingCustomerRequest,
+} from './model/billing/ticketbaiws-billing-customer.model.js';

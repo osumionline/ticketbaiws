@@ -1,5 +1,6 @@
 import TicketBaiWsConfigurationError from '../errors/ticketbaiws-configuration-error.js';
 import type TicketBaiWsClientOptions from '../model/common/ticketbaiws-client-options.model.js';
+import TicketBaiWsBillingResource from '../resources/billing.resource.js';
 import TicketBaiWsBizkaiaResource from '../resources/bizkaia.resource.js';
 import TicketBaiWsCompaniesResource from '../resources/companies.resource.js';
 import TicketBaiWsInvoicesResource from '../resources/invoices.resource.js';
@@ -14,6 +15,7 @@ import TICKETBAIWS_BASE_URLS from './ticketbaiws.constants.js';
 
 class TicketBaiWsClient {
   readonly bizkaia: TicketBaiWsBizkaiaResource;
+  readonly billing: TicketBaiWsBillingResource;
   readonly companies: TicketBaiWsCompaniesResource;
   readonly invoices: TicketBaiWsInvoicesResource;
   readonly licenses: TicketBaiWsLicensesResource;
@@ -76,6 +78,7 @@ class TicketBaiWsClient {
     );
 
     this.bizkaia = new TicketBaiWsBizkaiaResource(httpClient);
+    this.billing = new TicketBaiWsBillingResource(httpClient);
     this.companies = new TicketBaiWsCompaniesResource(httpClient);
     this.invoices = new TicketBaiWsInvoicesResource(httpClient);
     this.licenses = new TicketBaiWsLicensesResource(httpClient);
