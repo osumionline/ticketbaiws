@@ -20,6 +20,7 @@ client.bizkaia
 
 - [Epígrafes IAE](epigraphs.md)
 - [LROE — Facturas recibidas](received-invoices.md)
+- [LROE — Gastos sin factura](expenses-without-invoice.md)
 - [LROE — Criterio de caja: cobros](cash-collections.md)
 - [LROE — Criterio de caja: pagos](cash-payments.md)
 

@@ -10,7 +10,7 @@ La API pública se encuentra en:
 client.webhooks;
 ```
 
-y permite crear, modificar y consultar webhooks configurados en TicketBaiWS.
+y permite crear, modificar, consultar, listar y eliminar webhooks configurados en TicketBaiWS.
 
 ## Resumen de métodos
 
