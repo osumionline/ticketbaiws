@@ -11,7 +11,10 @@ antes de publicar una nueva versión del SDK.
 - SDK en desarrollo: 1.1.0
 - Inicio del registro: 27/11/2026
 - Referencia: OpenAPI 3.1.0, versión 1.0.8
-- Estado general: pendiente de comunicar a Berein
+- Estado general: comunicado a Berein, pendiente de respuesta
+- Comunicación: informe completo enviado; Berein ha confirmado que lo revisará
+- Plazo de respuesta: no comunicado
+- Publicación de SDK 1.1.0: aplazada hasta revisar la respuesta de Berein
 
 ### Fuentes principales
 
@@ -35,7 +38,7 @@ Conservar los identificadores `DISC-XXX`, aunque se resuelva una incidencia.
 
 ### DISC-001 — Tipos de campos con valores alfabéticos
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoints:** POST/PUT `/lroe-recibidas/`
 
@@ -56,7 +59,7 @@ https://ticketbaiws.eus/es/lroe-recibidas-post/
 
 ### DISC-002 — Tipo de `referencia_bien`
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoint:** POST `/lroe-recibidas/`
 
@@ -73,7 +76,7 @@ https://ticketbaiws.eus/es/lroe-recibidas-post/
 
 ### DISC-003 — Tipo de `epigrafe` en las bases
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoints:** POST/PUT `/lroe-recibidas/`
 
@@ -90,7 +93,7 @@ https://ticketbaiws.eus/es/lroe-recibidas-post/
 
 ### DISC-004 — Alias `importe` frente a `base_imponible`
 
-**Estado:** Por verificar
+**Estado:** Comunicada
 
 **Endpoints:** POST/PUT `/lroe-recibidas/`
 
@@ -109,7 +112,7 @@ el alias hasta aclarar el contrato.
 
 ### DISC-005 — `fecha_rectificada` en modificación
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoint:** PUT `/lroe-recibidas/`
 
@@ -131,7 +134,7 @@ https://ticketbaiws.eus/es/lroe-recibidas-put/
 
 ### DISC-006 — Campos obligatorios incompatibles entre modalidades
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoints:**
 
@@ -156,7 +159,7 @@ las dos modalidades.
 
 ### DISC-007 — Obligatoriedad de `fecha_operacion`
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoints:**
 
@@ -181,7 +184,7 @@ mantiene opcional cuando existe una factura asociada.
 
 ### DISC-008 — Eliminación de webhooks ausente del índice HTML
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoint:** DELETE `/webhooks/{codigo_webhook}/`
 
@@ -203,7 +206,7 @@ y a los ejemplos públicos.
 
 ### DISC-009 — Diferencias entre los ejemplos de notificaciones
 
-**Estado:** Por verificar
+**Estado:** Comunicada
 
 **Eventos afectados:** principalmente `cambio_estado`
 
@@ -232,7 +235,7 @@ y se tipan los cuatro eventos mediante el topic.
 
 ### DISC-010 — Ejemplo Java de modificación de webhook
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoint:** PUT `/webhooks/{codigo_webhook}/`
 
@@ -251,7 +254,7 @@ https://ticketbaiws.eus/es/webhooks-put/
 
 ### DISC-011 — Alias de campos en el alta de clientes
 
-**Estado:** Por verificar
+**Estado:** Comunicada
 
 **Endpoint:** POST `/clientes/`
 
@@ -281,7 +284,7 @@ https://api.ticketbaiws.eus/openapi.json
 
 ### DISC-012 — Endpoints de clientes y productos ausentes del índice HTML
 
-**Estado:** Pendiente
+**Estado:** Comunicada
 
 **Endpoints:**
 
@@ -326,18 +329,42 @@ que siguen pendientes y que conviene insistir en ellas.
 
 ---
 
-## 6. Informe a Berein
+## 6. Seguimiento de la respuesta de Berein
 
-Antes de publicar `@osumi/ticketbaiws` 1.1.0:
+El informe de discrepancias de la versión 1.1.0 ha sido
+enviado a Berein.
 
-1. Revisar todas las incidencias pendientes.
-2. Contrastar cada una con la versión más reciente del OpenAPI.
-3. Eliminar del informe las cuestiones resueltas o descartadas.
-4. Agrupar las dudas restantes por endpoint.
-5. Enviar el informe a Berein.
-6. Registrar la fecha de envío y actualizar los estados.
-7. Incorporar las respuestas de Berein antes de cerrar la versión.
+Berein ha confirmado que revisará las cuestiones planteadas,
+pero no ha comunicado un plazo de respuesta.
 
-Este archivo es el registro de seguimiento. No es necesario
-eliminar las incidencias resueltas: conservarlas permite
-entender decisiones de tipado tomadas durante el desarrollo.
+### Estado de la versión 1.1.0
+
+El desarrollo funcional y la documentación del SDK
+están terminados.
+
+Se han superado las comprobaciones de lint, compilación,
+tests con cobertura, empaquetado y consumo del paquete
+instalado.
+
+La versión 1.1.0 queda preparada, pero no se publicará
+hasta revisar las respuestas de Berein.
+
+### Cuando Berein responda
+
+1. Revisar cada respuesta y actualizar el estado
+   de su correspondiente incidencia DISC-XXX.
+2. Comprobar si se ha modificado el OpenAPI oficial.
+3. Revisar los cambios de comportamiento o contrato
+   que afecten a modelos, métodos o endpoints del SDK.
+4. Actualizar el código y sus tests cuando corresponda.
+5. Actualizar las guías de documentación afectadas.
+6. Ejecutar nuevamente `npm run check`.
+7. Revisar las notas de publicación de 1.1.0.
+8. Actualizar la versión en package.json y
+   package-lock.json, crear la tag y publicar.
+
+Las incidencias resueltas o descartadas deben conservarse
+en este documento como historial de decisiones técnicas.
+
+No deben darse por resueltas únicamente porque Berein
+haya confirmado la recepción del informe.
