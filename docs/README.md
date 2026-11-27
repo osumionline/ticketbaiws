@@ -38,6 +38,10 @@ El `README.md` de la raíz del proyecto está pensado como una introducción bre
 
 Los documentos enlazados que todavía no existan se irán incorporando conforme se complete la documentación de cada dominio.
 
+### Seguimiento de la API
+
+- [Discrepancias de la documentación de TicketBaiWS](discrepancias.md)
+
 ## Filosofía de la documentación
 
 Esta documentación describe el uso de `@osumi/ticketbaiws` y el contrato que expone el SDK.
@@ -90,8 +94,8 @@ No se desempaqueta automáticamente `return`. Por ejemplo:
 
 ```ts
 const response = await client.validation.aeat({
-    nif: '12345678Z',
-    nombre: 'Nombre Apellidos'
+  nif: '12345678Z',
+  nombre: 'Nombre Apellidos',
 });
 
 console.log(response.result);
@@ -156,8 +160,8 @@ Todos los tipos públicos necesarios para utilizar estos recursos se exportan de
 
 ```ts
 import {
-    TicketBaiWsClient,
-    type TicketBaiWsClientOptions
+  TicketBaiWsClient,
+  type TicketBaiWsClientOptions,
 } from '@osumi/ticketbaiws';
 ```
 

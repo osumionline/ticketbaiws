@@ -1,5 +1,6 @@
 import TicketBaiWsHttpClient from '../client/ticketbaiws-http-client.js';
 import type {
+  TicketBaiWsDeleteWebhookResponse,
   TicketBaiWsGetWebhookResponse,
   TicketBaiWsGetWebhookResult,
   TicketBaiWsListWebhooksRequest,
@@ -58,6 +59,22 @@ class TicketBaiWsWebhooksResource {
   async get(code: string): Promise<TicketBaiWsGetWebhookResponse> {
     return this.httpClient.request<TicketBaiWsGetWebhookResult>(
       'GET',
+      `webhooks/${encodeURIComponent(code)}/`,
+    );
+  }
+
+  /**
+   * Deletes an existing TicketBaiWS webhook configuration.
+   *
+   * The deletion applies to the webhook identified by its code
+   * in the current API environment.
+   *
+   * @param code Webhook code identifying the configuration to delete.
+   * @returns The TicketBaiWS webhook deletion response.
+   */
+  async delete(code: string): Promise<TicketBaiWsDeleteWebhookResponse> {
+    return this.httpClient.request<readonly unknown[]>(
+      'DELETE',
       `webhooks/${encodeURIComponent(code)}/`,
     );
   }

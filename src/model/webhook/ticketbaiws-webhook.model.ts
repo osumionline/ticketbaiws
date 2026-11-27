@@ -59,11 +59,21 @@ type TicketBaiWsGetWebhookResult = TicketBaiWsWebhook;
 type TicketBaiWsGetWebhookResponse =
   TicketBaiWsSuccessResponse<TicketBaiWsGetWebhookResult>;
 
+/**
+ * Response returned after deleting a webhook configuration.
+ *
+ * The documented successful response contains an empty array.
+ */
+type TicketBaiWsDeleteWebhookResponse = TicketBaiWsSuccessResponse<
+  readonly unknown[]
+>;
+
 type TicketBaiWsListWebhooksResponse = TicketBaiWsSuccessResponse<
   readonly TicketBaiWsWebhook[]
 >;
 
 export type {
+  TicketBaiWsDeleteWebhookResponse,
   TicketBaiWsGetWebhookResponse,
   TicketBaiWsGetWebhookResult,
   TicketBaiWsListWebhooksRequest,

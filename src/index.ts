@@ -120,6 +120,7 @@ export type {
 } from './model/license/ticketbaiws-license.model.js';
 
 export type {
+  TicketBaiWsDeleteWebhookResponse,
   TicketBaiWsGetWebhookResponse,
   TicketBaiWsGetWebhookResult,
   TicketBaiWsListWebhooksRequest,

@@ -60,6 +60,8 @@ describe('@osumi/ticketbaiws public API', (): void => {
 
     expect(client.webhooks.get).toBeTypeOf('function');
 
+    expect(client.webhooks.delete).toBeTypeOf('function');
+
     expect(client.webhooks.list).toBeTypeOf('function');
 
     expect(client.verifactu.representation.getTemplate).toBeTypeOf('function');
