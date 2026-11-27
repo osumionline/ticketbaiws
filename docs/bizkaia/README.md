@@ -11,6 +11,7 @@ client.bizkaia
 ├── epigraphs
 └── lroe
     ├── receivedInvoices
+    ├── expensesWithoutInvoice
     ├── cashCollections
     └── cashPayments
 ```
@@ -27,7 +28,7 @@ client.bizkaia
 ### Epígrafes
 
 ```ts
-client.bizkaia.epigraphs.list()
+client.bizkaia.epigraphs.list();
 ```
 
 ### Facturas recibidas
@@ -38,6 +39,29 @@ client.bizkaia.lroe.receivedInvoices.update(...)
 client.bizkaia.lroe.receivedInvoices.list(...)
 client.bizkaia.lroe.receivedInvoices.cancel(...)
 ```
+
+### Gastos sin factura
+
+```ts
+client.bizkaia.lroe.expensesWithoutInvoice.create(...)
+client.bizkaia.lroe.expensesWithoutInvoice.update(...)
+client.bizkaia.lroe.expensesWithoutInvoice.list(...)
+client.bizkaia.lroe.expensesWithoutInvoice.cancel(...)
+```
+
+Este recurso corresponde al apartado 2.2 del LROE de
+Bizkaia, modelo 140, y permite registrar gastos que
+no están respaldados por una factura.
+
+Las operaciones de alta, modificación y anulación
+utilizan lotes de registros.
+
+El identificador de cada gasto se compone de
+`fecha_operacion`, `epigrafe`, `concepto` y `linea`,
+con los valores predeterminados que documenta Berein
+para los campos opcionales.
+
+El SDK no completa automáticamente esos identificadores.
 
 ### Cobros por criterio de caja
 
@@ -57,7 +81,7 @@ client.bizkaia.lroe.cashPayments.list(...)
 client.bizkaia.lroe.cashPayments.cancel(...)
 ```
 
-En total, este dominio cubre las 13 operaciones específicas para BATUZ Bizkaia documentadas actualmente por TicketBaiWS.
+En total, este dominio expone 17 operaciones: una consulta de epígrafes y cuatro operaciones para cada uno de los cuatro recursos LROE (facturas recibidas, gastos sin factura, cobros y pagos).
 
 ## Alcance
 
@@ -122,10 +146,10 @@ Ejemplo conceptual:
 
 ```ts
 await client.bizkaia.lroe.receivedInvoices.create({
-    ejercicio: 2026,
-    facturas: [
-        /* hasta 1000 facturas */
-    ]
+  ejercicio: 2026,
+  facturas: [
+    /* hasta 1000 facturas */
+  ],
 });
 ```
 
@@ -135,16 +159,16 @@ Si la aplicación necesita enviar más registros debe paginarlos o agruparlos ex
 
 ## Año fiscal
 
-Los tres dominios LROE utilizan:
+Los cuatro recursos LROE utilizan:
 
 ```ts
-ejercicio: number
+ejercicio: number;
 ```
 
 Ejemplo:
 
 ```ts
-ejercicio: 2026
+ejercicio: 2026;
 ```
 
 El SDK no comprueba que el ejercicio coincida con las fechas de los registros.
@@ -156,17 +180,18 @@ Las mutaciones devuelven un resultado individual por cada elemento procesado.
 Los estados conocidos son:
 
 ```ts
-'Correcto'
-'AceptadoConErrores'
-'Incorrecto'
+'Correcto';
+'AceptadoConErrores';
+'Incorrecto';
 ```
 
 Estos estados se exponen mediante tipos específicos de cada dominio, por ejemplo:
 
 ```ts
-TicketBaiWsLroeReceivedInvoiceResultStatus
-TicketBaiWsLroeCashCollectionResultStatus
-TicketBaiWsLroeCashPaymentResultStatus
+TicketBaiWsLroeReceivedInvoiceResultStatus;
+TicketBaiWsLroeCashCollectionResultStatus;
+TicketBaiWsLroeCashPaymentResultStatus;
+TicketBaiWsLroeExpenseWithoutInvoiceResultStatus;
 ```
 
 Aunque actualmente tienen los mismos literales, se mantienen separados para que cada modelo sea autocontenido y pueda evolucionar si TicketBaiWS modifica uno de los contratos.
@@ -176,8 +201,8 @@ Aunque actualmente tienen los mismos literales, se mantienen separados para que 
 Además del estado individual, las mutaciones devuelven:
 
 ```ts
-'OK'
-'ERROR'
+'OK';
+'ERROR';
 ```
 
 Ejemplo conceptual:
@@ -221,7 +246,7 @@ Una respuesta HTTP/API puede llegar correctamente y, aun así, contener registro
 La aplicación debe revisar siempre:
 
 ```ts
-response.return.response
+response.return.response;
 ```
 
 y no limitarse a comprobar el `result` exterior.
@@ -282,6 +307,25 @@ Los modelos de escritura utilizan `number` cuando el request documentado trabaja
 
 Por ello no debe reutilizarse un resultado GET como si fuese directamente un request POST/PUT.
 
+### Excepción: gastos sin factura
+
+El recurso de gastos sin factura tiene su propio modelo
+de consulta:
+
+```ts
+TicketBaiWsLroeExpenseWithoutInvoiceQueryItem;
+```
+
+En los ejemplos documentados para este recurso,
+`importe` se devuelve como `number`.
+
+El SDK mantiene ese tipo y no lo transforma en cadena.
+
+Por tanto, las representaciones de lectura deben
+consultarse en el modelo específico de cada recurso,
+en lugar de asumir que todos los importes LROE se
+devuelven del mismo modo.
+
 ## GET mediante query string
 
 Las consultas LROE oficiales son operaciones GET.
@@ -302,8 +346,8 @@ La aplicación solo proporciona el objeto tipado:
 
 ```ts
 await client.bizkaia.lroe.receivedInvoices.list({
-    ejercicio: 2026,
-    pagina: 1
+  ejercicio: 2026,
+  pagina: 1,
 });
 ```
 
@@ -312,13 +356,13 @@ await client.bizkaia.lroe.receivedInvoices.list({
 Los códigos de epígrafe se representan como:
 
 ```ts
-string
+string;
 ```
 
 Ejemplo:
 
 ```ts
-'197210'
+'197210';
 ```
 
 Esto es coherente con el listado oficial de epígrafes y con los JSON publicados por TicketBaiWS.
@@ -341,10 +385,10 @@ Aunque algunos sean numéricos visualmente, se tratan como códigos y no como ma
 Ejemplos:
 
 ```ts
-tipo_documento: '02'
-tipo_ingreso: '2'
-concepto: '600'
-forma_pago: '01'
+tipo_documento: '02';
+tipo_ingreso: '2';
+concepto: '600';
+forma_pago: '01';
 ```
 
 Esto preserva ceros iniciales y evita conversiones innecesarias.
@@ -393,6 +437,10 @@ https://ticketbaiws.eus/es/lroe-critcaja-cobros-post/
 Pagos por criterio de caja:
 
 https://ticketbaiws.eus/es/lroe-critcaja-pagos-post/
+
+Gastos sin factura:
+
+https://ticketbaiws.eus/es/lroe-gastos-sinfactura-post/
 
 ---
 

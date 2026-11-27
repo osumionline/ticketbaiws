@@ -7,7 +7,7 @@ Este documento describe el recurso de empresas de `@osumi/ticketbaiws`.
 La API pública se encuentra en:
 
 ```ts
-client.companies
+client.companies;
 ```
 
 y permite crear empresas, modificar sus datos y consultar las empresas asociadas a la cuenta de TicketBaiWS.
@@ -22,27 +22,27 @@ client.companies.list(...)
 
 Correspondencia con TicketBaiWS:
 
-| Método del SDK | Método HTTP | Recurso |
-| --- | --- | --- |
-| `create()` | `POST` | `empresas/` |
-| `update()` | `PUT` | `empresas/{NIF}/` |
-| `list()` | `GET` | `empresas/` |
+| Método del SDK | Método HTTP | Recurso           |
+| -------------- | ----------- | ----------------- |
+| `create()`     | `POST`      | `empresas/`       |
+| `update()`     | `PUT`       | `empresas/{NIF}/` |
+| `list()`       | `GET`       | `empresas/`       |
 
 ## Crear una empresa
 
 ```ts
 const response = await client.companies.create({
-    nombre_social: 'Empresa de ejemplo S.L.',
-    nombre_comercial: 'Comercio de ejemplo',
-    nif: 'B01000012',
-    direccion: 'Calle de ejemplo 1',
-    poblacion: 'Bilbao',
-    provincia: 'Bizkaia',
-    cp: '48001',
-    email: 'info@example.com',
-    web: 'https://example.com',
-    diputacion: 2,
-    epigrafe: '301800'
+  nombre_social: 'Empresa de ejemplo S.L.',
+  nombre_comercial: 'Comercio de ejemplo',
+  nif: 'B01000012',
+  direccion: 'Calle de ejemplo 1',
+  poblacion: 'Bilbao',
+  provincia: 'Bizkaia',
+  cp: '48001',
+  email: 'info@example.com',
+  web: 'https://example.com',
+  diputacion: 2,
+  epigrafe: '301800',
 });
 ```
 
@@ -50,18 +50,19 @@ El request utiliza:
 
 ```ts
 interface TicketBaiWsCreateCompanyRequest {
-    readonly id_licencia?: number;
-    readonly nombre_social: string;
-    readonly nombre_comercial?: string;
-    readonly nif: string;
-    readonly direccion: string;
-    readonly poblacion: string;
-    readonly provincia: string;
-    readonly cp: string;
-    readonly email?: string;
-    readonly web?: string;
-    readonly diputacion: TicketBaiWsCompanyTaxAuthority;
-    readonly epigrafe?: string;
+  readonly id_licencia?: number;
+  readonly nombre_social: string;
+  readonly nombre_comercial?: string;
+  readonly nif: string;
+  readonly direccion: string;
+  readonly poblacion: string;
+  readonly provincia: string;
+  readonly cp: string;
+  readonly email?: string;
+  readonly web?: string;
+  readonly diputacion: TicketBaiWsCompanyTaxAuthority;
+  readonly epigrafe?: string;
+  readonly spfe?: boolean;
 }
 ```
 
@@ -76,11 +77,7 @@ Es opcional en el SDK porque TicketBaiWS documenta que, si no se informa, utiliz
 El SDK expone:
 
 ```ts
-type TicketBaiWsCompanyTaxAuthority =
-    | 1
-    | 2
-    | 3
-    | 4;
+type TicketBaiWsCompanyTaxAuthority = 1 | 2 | 3 | 4;
 ```
 
 Códigos documentados por TicketBaiWS:
@@ -95,7 +92,7 @@ Códigos documentados por TicketBaiWS:
 Ejemplo:
 
 ```ts
-diputacion: 2
+diputacion: 2;
 ```
 
 para una empresa que presenta en Bizkaia.
@@ -117,43 +114,81 @@ El SDK no intenta determinar automáticamente si una empresa está obligada a in
 Ejemplo:
 
 ```ts
-epigrafe: '301800'
+epigrafe: '301800';
 ```
+
+### `spfe`
+
+Permite activar o desactivar la facturación electrónica
+B2B mediante la Solución Pública de Facturación Electrónica
+de la AEAT.
+
+El SDK utiliza:
+
+```ts
+spfe?: boolean;
+```
+
+Puede enviarse al crear una empresa:
+
+```ts
+spfe: true;
+```
+
+o al modificarla:
+
+```ts
+await client.companies.update('B01000012', {
+  spfe: false,
+});
+```
+
+La propiedad también puede aparecer en las respuestas
+de consulta de empresas.
+
+Si se omite durante la creación, Berein aplica su
+comportamiento predeterminado.
+
+Si se omite durante la modificación, se conserva
+la configuración existente.
+
+El SDK no activa SPFE automáticamente.
 
 ## Respuesta
 
 Las operaciones de empresa utilizan:
 
 ```ts
-TicketBaiWsCompanyResponse
+TicketBaiWsCompanyResponse;
 ```
 
 y devuelven un:
 
 ```ts
-TicketBaiWsCompany
+TicketBaiWsCompany;
 ```
 
 Modelo público:
 
 ```ts
 interface TicketBaiWsCompany {
-    readonly id: string;
-    readonly id_licencia: string;
-    readonly epigrafe: string;
-    readonly nombre_social: string;
-    readonly nombre_comercial: string;
-    readonly nif: string;
-    readonly direccion: string;
-    readonly poblacion: string;
-    readonly provincia: string;
-    readonly cp: string;
-    readonly email: string;
-    readonly web: string;
-    readonly diputacion?: TicketBaiWsCompanyTaxAuthority;
-    readonly token: string;
-    readonly token_test: string;
-    readonly autorenovacion?: boolean;
+  readonly id: string;
+  readonly id_licencia: string;
+  readonly epigrafe: string;
+  readonly nombre_social: string;
+  readonly nombre_comercial: string;
+  readonly nif: string;
+  readonly direccion: string;
+  readonly poblacion: string;
+  readonly provincia: string;
+  readonly cp: string;
+  readonly email: string;
+  readonly web: string;
+  readonly diputacion?: TicketBaiWsCompanyTaxAuthority;
+  readonly token: string;
+  readonly token_test: string;
+  readonly autorenovacion?: boolean;
+  readonly spfe?: boolean;
 }
 ```
 
@@ -161,13 +196,13 @@ Ejemplo:
 
 ```ts
 const response = await client.companies.create({
-    nombre_social: 'Empresa de ejemplo S.L.',
-    nif: 'B01000012',
-    direccion: 'Calle 1',
-    poblacion: 'Bilbao',
-    provincia: 'Bizkaia',
-    cp: '48001',
-    diputacion: 2
+  nombre_social: 'Empresa de ejemplo S.L.',
+  nif: 'B01000012',
+  direccion: 'Calle 1',
+  poblacion: 'Bilbao',
+  provincia: 'Bizkaia',
+  cp: '48001',
+  diputacion: 2,
 });
 
 console.log(response.return.id);
@@ -180,8 +215,8 @@ console.log(response.return.token_test);
 La respuesta puede incluir:
 
 ```ts
-token
-token_test
+token;
+token_test;
 ```
 
 Estos valores son credenciales y deben tratarse como información sensible por la aplicación consumidora.
@@ -193,14 +228,11 @@ No deben registrarse en logs ni incluirse en repositorios.
 La modificación utiliza el NIF en la URL:
 
 ```ts
-await client.companies.update(
-    'B01000012',
-    {
-        nombre_comercial: 'Nuevo nombre comercial',
-        email: 'nuevo@example.com',
-        autorenovacion: true
-    }
-);
+await client.companies.update('B01000012', {
+  nombre_comercial: 'Nuevo nombre comercial',
+  email: 'nuevo@example.com',
+  autorenovacion: true,
+});
 ```
 
 Firma conceptual:
@@ -216,16 +248,17 @@ Modelo:
 
 ```ts
 interface TicketBaiWsUpdateCompanyRequest {
-    readonly nombre_social?: string;
-    readonly nombre_comercial?: string;
-    readonly direccion?: string;
-    readonly poblacion?: string;
-    readonly provincia?: string;
-    readonly cp?: string;
-    readonly email?: string;
-    readonly web?: string;
-    readonly epigrafe?: string;
-    readonly autorenovacion?: boolean;
+  readonly nombre_social?: string;
+  readonly nombre_comercial?: string;
+  readonly direccion?: string;
+  readonly poblacion?: string;
+  readonly provincia?: string;
+  readonly cp?: string;
+  readonly email?: string;
+  readonly web?: string;
+  readonly epigrafe?: string;
+  readonly autorenovacion?: boolean;
+  readonly spfe?: boolean;
 }
 ```
 
@@ -250,12 +283,9 @@ autorenovacion?: boolean;
 Ejemplo:
 
 ```ts
-await client.companies.update(
-    'B01000012',
-    {
-        autorenovacion: true
-    }
-);
+await client.companies.update('B01000012', {
+  autorenovacion: true,
+});
 ```
 
 La tabla oficial describe actualmente `autorenovacion` como `string`, pero sus ejemplos JSON y respuestas lo utilizan como booleano.
@@ -274,8 +304,8 @@ También se pueden aplicar:
 
 ```ts
 interface TicketBaiWsListCompaniesRequest {
-    readonly id_licencia?: string;
-    readonly nif?: string;
+  readonly id_licencia?: string;
+  readonly nif?: string;
 }
 ```
 
@@ -283,7 +313,7 @@ interface TicketBaiWsListCompaniesRequest {
 
 ```ts
 const response = await client.companies.list({
-    id_licencia: '999'
+  id_licencia: '999',
 });
 ```
 
@@ -291,7 +321,7 @@ const response = await client.companies.list({
 
 ```ts
 const response = await client.companies.list({
-    nif: 'B01000012'
+  nif: 'B01000012',
 });
 ```
 
@@ -299,8 +329,8 @@ const response = await client.companies.list({
 
 ```ts
 const response = await client.companies.list({
-    id_licencia: '999',
-    nif: 'B01000012'
+  id_licencia: '999',
+  nif: 'B01000012',
 });
 ```
 
@@ -315,7 +345,7 @@ No envía un body JSON en la petición GET.
 La respuesta es:
 
 ```ts
-TicketBaiWsListCompaniesResponse
+TicketBaiWsListCompaniesResponse;
 ```
 
 con:
@@ -331,13 +361,13 @@ dentro de `return`.
 `@osumi/ticketbaiws` utiliza el entorno configurado en `TicketBaiWsClient`:
 
 ```ts
-environment: 'test'
+environment: 'test';
 ```
 
 o:
 
 ```ts
-environment: 'production'
+environment: 'production';
 ```
 
 Por tanto, conceptualmente:
@@ -355,13 +385,13 @@ El SDK mantiene una política uniforme y utiliza el entorno seleccionado en el c
 
 ```ts
 import type {
-    TicketBaiWsCompany,
-    TicketBaiWsCompanyResponse,
-    TicketBaiWsCompanyTaxAuthority,
-    TicketBaiWsCreateCompanyRequest,
-    TicketBaiWsListCompaniesRequest,
-    TicketBaiWsListCompaniesResponse,
-    TicketBaiWsUpdateCompanyRequest
+  TicketBaiWsCompany,
+  TicketBaiWsCompanyResponse,
+  TicketBaiWsCompanyTaxAuthority,
+  TicketBaiWsCreateCompanyRequest,
+  TicketBaiWsListCompaniesRequest,
+  TicketBaiWsListCompaniesResponse,
+  TicketBaiWsUpdateCompanyRequest,
 } from '@osumi/ticketbaiws';
 ```
 

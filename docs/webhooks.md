@@ -7,7 +7,7 @@ Este documento describe el recurso de webhooks de `@osumi/ticketbaiws`.
 La API pública se encuentra en:
 
 ```ts
-client.webhooks
+client.webhooks;
 ```
 
 y permite crear, modificar y consultar webhooks configurados en TicketBaiWS.
@@ -18,30 +18,33 @@ y permite crear, modificar y consultar webhooks configurados en TicketBaiWS.
 client.webhooks.create(...)
 client.webhooks.update(...)
 client.webhooks.get(...)
+client.webhooks.delete(...)
 client.webhooks.list(...)
 ```
 
 Correspondencia con TicketBaiWS:
 
-| Método del SDK | Método HTTP | Recurso |
-| --- | --- | --- |
-| `create()` | `POST` | `webhooks/` |
-| `update()` | `PUT` | `webhooks/{codigo}/` |
-| `get()` | `GET` | `webhooks/{codigo}/` |
-| `list()` | `GET` | `webhooks/` |
+| Método del SDK | HTTP     | Recurso              |
+| -------------- | -------- | -------------------- |
+| `create()`     | `POST`   | `webhooks/`          |
+| `update()`     | `PUT`    | `webhooks/{codigo}/` |
+| `get()`        | `GET`    | `webhooks/{codigo}/` |
+| `delete()`     | `DELETE` | `webhooks/{codigo}/` |
+| `list()`       | `GET`    | `webhooks/`          |
 
-TicketBaiWS documenta tres operaciones HTTP, pero la consulta GET admite dos rutas distintas: listado completo y consulta por código.
+Las operaciones GET se separan en consulta individual y listado.
 
-El SDK las separa en `list()` y `get()` para ofrecer una API más explícita.
+La creación y modificación permiten seleccionar los eventos de
+notificación mediante la propiedad opcional `eventos`.
 
 ## Crear un webhook
 
 ```ts
 const response = await client.webhooks.create({
-    url: 'https://example.com/ticketbai/webhook',
-    secret: 'una-clave-secreta',
-    solo_errores: true,
-    activo: true
+  url: 'https://example.com/ticketbai/webhook',
+  secret: 'una-clave-secreta',
+  solo_errores: true,
+  activo: true,
 });
 ```
 
@@ -49,10 +52,11 @@ El request utiliza:
 
 ```ts
 interface TicketBaiWsWebhookRequest {
-    readonly url: string;
-    readonly secret: string;
-    readonly solo_errores?: boolean;
-    readonly activo?: boolean;
+  readonly url: string;
+  readonly secret: string;
+  readonly solo_errores?: boolean;
+  readonly activo?: boolean;
+  readonly eventos?: readonly TicketBaiWsWebhookEvent[];
 }
 ```
 
@@ -63,7 +67,7 @@ URL a la que TicketBaiWS enviará las notificaciones.
 Ejemplo:
 
 ```ts
-url: 'https://example.com/ticketbai/webhook'
+url: 'https://example.com/ticketbai/webhook';
 ```
 
 La aplicación consumidora debe asegurarse de que la URL sea accesible para TicketBaiWS.
@@ -75,7 +79,7 @@ Clave utilizada para verificar la autenticidad del webhook.
 Ejemplo:
 
 ```ts
-secret: 'una-clave-secreta'
+secret: 'una-clave-secreta';
 ```
 
 Debe almacenarse de forma segura.
@@ -99,7 +103,7 @@ Permite pedir que el webhook se envíe únicamente cuando se produzcan errores o
 Ejemplo:
 
 ```ts
-solo_errores: true
+solo_errores: true;
 ```
 
 ## `activo`
@@ -113,8 +117,46 @@ Permite activar o desactivar temporalmente el webhook.
 Ejemplo:
 
 ```ts
-activo: true
+activo: true;
 ```
+
+## `eventos`
+
+Permite seleccionar qué notificaciones debe recibir el webhook.
+
+```ts
+type TicketBaiWsWebhookEvent =
+  | 'cambio_estado'
+  | 'spfe_envio'
+  | 'spfe_estado'
+  | 'spfe_recibida';
+```
+
+| Evento          | Descripción                                                     |
+| --------------- | --------------------------------------------------------------- |
+| `cambio_estado` | Cambios de estado de facturas TicketBAI o Verifactu             |
+| `spfe_envio`    | Resultado del envío de una factura a SPFE                       |
+| `spfe_estado`   | Resultado de comunicar pagos, cobros, rechazos o impagos a SPFE |
+| `spfe_recibida` | Recepción de una factura electrónica a través de SPFE           |
+
+Ejemplo:
+
+```ts
+await client.webhooks.create({
+  url: 'https://example.com/webhook',
+  secret: 'una-clave-secreta',
+  eventos: ['cambio_estado', 'spfe_recibida'],
+});
+```
+
+Cuando se omite `eventos` al crear, Berein utiliza
+`['cambio_estado']` como valor predeterminado.
+
+Cuando se omite al modificar, Berein conserva las
+suscripciones existentes.
+
+El SDK no introduce ni modifica automáticamente
+esos valores.
 
 ## Respuesta
 
@@ -122,15 +164,16 @@ Un webhook utiliza:
 
 ```ts
 interface TicketBaiWsWebhook {
-    readonly codigo: string;
-    readonly url: string;
-    readonly entorno: string;
-    readonly secret: string;
-    readonly solo_errores: boolean;
-    readonly activo: boolean;
-    readonly fecha_creado: string;
-    readonly fecha_modificado: string;
-    readonly nif?: string;
+  readonly codigo: string;
+  readonly url: string;
+  readonly entorno: string;
+  readonly secret: string;
+  readonly solo_errores: boolean;
+  readonly activo: boolean;
+  readonly fecha_creado: string;
+  readonly fecha_modificado: string;
+  readonly nif?: string;
+  readonly eventos?: readonly TicketBaiWsWebhookEvent[];
 }
 ```
 
@@ -138,9 +181,9 @@ Ejemplo:
 
 ```ts
 const response = await client.webhooks.create({
-    url: 'https://example.com/webhook',
-    secret: 'secret',
-    activo: true
+  url: 'https://example.com/webhook',
+  secret: 'secret',
+  activo: true,
 });
 
 console.log(response.return.codigo);
@@ -155,6 +198,7 @@ Se utiliza posteriormente para:
 ```ts
 client.webhooks.get(codigo)
 client.webhooks.update(codigo, ...)
+client.webhooks.delete(codigo)
 ```
 
 ### `entorno`
@@ -162,7 +206,7 @@ client.webhooks.update(codigo, ...)
 El SDK lo mantiene como:
 
 ```ts
-string
+string;
 ```
 
 y no como una unión cerrada.
@@ -192,15 +236,12 @@ Por ello se mantiene opcional.
 La modificación recibe el código por separado:
 
 ```ts
-await client.webhooks.update(
-    '6904a3501884e',
-    {
-        url: 'https://example.com/new-webhook',
-        secret: 'nuevo-secret',
-        solo_errores: false,
-        activo: true
-    }
-);
+await client.webhooks.update('6904a3501884e', {
+  url: 'https://example.com/new-webhook',
+  secret: 'nuevo-secret',
+  solo_errores: false,
+  activo: true,
+});
 ```
 
 El SDK construye:
@@ -212,7 +253,7 @@ PUT /webhooks/6904a3501884e/
 El body utiliza de nuevo:
 
 ```ts
-TicketBaiWsWebhookRequest
+TicketBaiWsWebhookRequest;
 ```
 
 Actualmente `url` y `secret` son obligatorios en ese modelo, siguiendo la tabla oficial de modificación.
@@ -220,9 +261,7 @@ Actualmente `url` y `secret` son obligatorios en ese modelo, siguiendo la tabla 
 ## Consultar un webhook por código
 
 ```ts
-const response = await client.webhooks.get(
-    '6904a3501884e'
-);
+const response = await client.webhooks.get('6904a3501884e');
 ```
 
 La petición es:
@@ -234,59 +273,59 @@ GET /webhooks/6904a3501884e/
 Tipo de respuesta:
 
 ```ts
-type TicketBaiWsGetWebhookResult =
-    | TicketBaiWsWebhook
-    | readonly TicketBaiWsWebhook[];
+type TicketBaiWsGetWebhookResult = TicketBaiWsWebhook;
+
+type TicketBaiWsGetWebhookResponse =
+  TicketBaiWsSuccessResponse<TicketBaiWsGetWebhookResult>;
 ```
 
-y:
+El resultado contiene un único objeto de configuración:
 
 ```ts
-type TicketBaiWsGetWebhookResponse =
-    TicketBaiWsSuccessResponse<
-        TicketBaiWsGetWebhookResult
-    >;
+const response = await client.webhooks.get('6904a3501884e');
+
+console.log(response.return.codigo);
+console.log(response.return.url);
+console.log(response.return.eventos);
 ```
 
-### Por qué el resultado admite objeto o array
+A diferencia de `list()`, no devuelve un array.
 
-La documentación oficial declara explícitamente ambas rutas:
+## Eliminar un webhook
+
+```ts
+const response = await client.webhooks.delete('6904a3501884e');
+```
+
+El SDK realiza:
 
 ```text
-GET /webhooks/
-GET /webhooks/{codigo_webhook}/
+DELETE /webhooks/6904a3501884e/
 ```
 
-pero el ejemplo de respuesta publicado muestra únicamente un array.
+No envía cuerpo JSON.
 
-No queda completamente definido si el endpoint por código devuelve:
-
-```ts
-TicketBaiWsWebhook
-```
-
-o:
+La respuesta satisfactoria documentada por Berein contiene
+un array vacío dentro de `return`:
 
 ```ts
-readonly TicketBaiWsWebhook[]
-```
-
-Para no inventar un contrato más estricto que el documentado, el SDK acepta ambas formas.
-
-El consumidor puede comprobarlo mediante:
-
-```ts
-const response = await client.webhooks.get(code);
-
-if (Array.isArray(response.return)) {
-    const webhook = response.return[0];
-}
-else {
-    const webhook = response.return;
+{
+    result: 'OK',
+    return: [],
+    msg: null
 }
 ```
 
-Si TicketBaiWS aclara el contrato en el futuro, este tipo podrá hacerse más específico.
+El tipo público es:
+
+```ts
+type TicketBaiWsDeleteWebhookResponse = TicketBaiWsSuccessResponse<
+  readonly unknown[]
+>;
+```
+
+La eliminación afecta al webhook identificado por su código
+en el entorno configurado en el cliente.
 
 ## Listar webhooks
 
@@ -300,8 +339,8 @@ Con filtros:
 
 ```ts
 const response = await client.webhooks.list({
-    solo_errores: true,
-    activo: true
+  solo_errores: true,
+  activo: true,
 });
 ```
 
@@ -309,8 +348,8 @@ Modelo:
 
 ```ts
 interface TicketBaiWsListWebhooksRequest {
-    readonly solo_errores?: boolean;
-    readonly activo?: boolean;
+  readonly solo_errores?: boolean;
+  readonly activo?: boolean;
 }
 ```
 
@@ -325,7 +364,7 @@ No envía JSON en el body del GET.
 La respuesta es:
 
 ```ts
-TicketBaiWsListWebhooksResponse
+TicketBaiWsListWebhooksResponse;
 ```
 
 con:
@@ -335,6 +374,102 @@ readonly TicketBaiWsWebhook[]
 ```
 
 dentro de `return`.
+
+## Notificaciones entrantes
+
+TicketBaiWS envía notificaciones HTTP POST a la URL configurada
+en cada webhook.
+
+El SDK publica los tipos TypeScript de los cuatro eventos,
+pero no implementa un servidor receptor ni interpreta
+automáticamente los mensajes entrantes.
+
+### Identificación del evento
+
+La cabecera `X-TbaiWs-Topic` identifica el evento:
+
+```ts
+type TicketBaiWsWebhookEvent =
+  | 'cambio_estado'
+  | 'spfe_envio'
+  | 'spfe_estado'
+  | 'spfe_recibida';
+```
+
+El cuerpo JSON no siempre contiene la propiedad `evento`.
+En particular, los ejemplos de `cambio_estado` pueden omitirla.
+
+Por tanto, no debe dependerse exclusivamente de esa
+propiedad para identificar la notificación.
+
+### Cabeceras
+
+El SDK expone:
+
+```ts
+interface TicketBaiWsWebhookNotificationHeaders {
+  readonly 'X-TbaiWs-Id': string;
+  readonly 'X-TbaiWs-Environment': 'test' | 'real';
+  readonly 'X-TbaiWs-Topic': TicketBaiWsWebhookEvent;
+  readonly 'X-Tbaiws-Hmac-Sha256'?: string;
+}
+```
+
+Los nombres de cabeceras HTTP no distinguen entre mayúsculas
+y minúsculas. En una aplicación web pueden obtenerse mediante
+`Headers.get()`.
+
+La cabecera de firma es opcional en el contrato documentado.
+
+### Tipos de los cuatro eventos
+
+| Evento          | Tipo público                                  |
+| --------------- | --------------------------------------------- |
+| `cambio_estado` | `TicketBaiWsInvoiceStatusWebhookNotification` |
+| `spfe_envio`    | `TicketBaiWsSpfeSentWebhookNotification`      |
+| `spfe_estado`   | `TicketBaiWsSpfeStatusWebhookNotification`    |
+| `spfe_recibida` | `TicketBaiWsSpfeReceivedWebhookNotification`  |
+
+También están disponibles:
+
+```ts
+TicketBaiWsWebhookNotification;
+TicketBaiWsWebhookNotificationByEvent;
+TicketBaiWsWebhookNotificationEnvironment;
+TicketBaiWsWebhookNotificationHeaders;
+TicketBaiWsWebhookSpfeError;
+```
+
+`TicketBaiWsWebhookNotificationByEvent` permite relacionar
+cada nombre de evento con su tipo correspondiente:
+
+```ts
+import type { TicketBaiWsWebhookNotificationByEvent } from '@osumi/ticketbaiws';
+
+type ReceivedInvoiceNotification =
+  TicketBaiWsWebhookNotificationByEvent['spfe_recibida'];
+```
+
+Las propiedades de los payloads se mantienen opcionales
+cuando el esquema OpenAPI no garantiza su presencia.
+
+Estos tipos representan el contrato publicado; no validan
+automáticamente el JSON recibido.
+
+### Seguridad y validación
+
+El receptor debe verificar la firma HMAC, cuando corresponda,
+utilizando los bytes originales del cuerpo recibido.
+
+Después debe validar el contenido antes de tratarlo como
+uno de los modelos públicos del SDK.
+
+La existencia de un tipo TypeScript no demuestra que una
+notificación sea auténtica ni que sus datos sean válidos.
+
+Los eventos SPFE pueden incluir información fiscal y
+personal, por lo que deben procesarse y almacenarse
+con las medidas de seguridad correspondientes.
 
 ## Verificación de la firma HMAC
 
@@ -357,20 +492,20 @@ Ejemplo conceptual en una plataforma con Web Crypto:
 const encoder = new TextEncoder();
 
 const key = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(secret),
-    {
-        name: 'HMAC',
-        hash: 'SHA-256'
-    },
-    false,
-    ['sign']
+  'raw',
+  encoder.encode(secret),
+  {
+    name: 'HMAC',
+    hash: 'SHA-256',
+  },
+  false,
+  ['sign'],
 );
 
 const signature = await crypto.subtle.sign(
-    'HMAC',
-    key,
-    encoder.encode(rawBody)
+  'HMAC',
+  key,
+  encoder.encode(rawBody),
 );
 ```
 
@@ -403,13 +538,13 @@ https://{entorno}.ticketbaiws.eus/webhooks/
 Por ello respetan directamente:
 
 ```ts
-environment: 'test'
+environment: 'test';
 ```
 
 o:
 
 ```ts
-environment: 'production'
+environment: 'production';
 ```
 
 del cliente.
@@ -418,13 +553,24 @@ del cliente.
 
 ```ts
 import type {
-    TicketBaiWsGetWebhookResponse,
-    TicketBaiWsGetWebhookResult,
-    TicketBaiWsListWebhooksRequest,
-    TicketBaiWsListWebhooksResponse,
-    TicketBaiWsWebhook,
-    TicketBaiWsWebhookRequest,
-    TicketBaiWsWebhookResponse
+  TicketBaiWsDeleteWebhookResponse,
+  TicketBaiWsGetWebhookResponse,
+  TicketBaiWsGetWebhookResult,
+  TicketBaiWsInvoiceStatusWebhookNotification,
+  TicketBaiWsListWebhooksRequest,
+  TicketBaiWsListWebhooksResponse,
+  TicketBaiWsSpfeReceivedWebhookNotification,
+  TicketBaiWsSpfeSentWebhookNotification,
+  TicketBaiWsSpfeStatusWebhookNotification,
+  TicketBaiWsWebhook,
+  TicketBaiWsWebhookEvent,
+  TicketBaiWsWebhookNotification,
+  TicketBaiWsWebhookNotificationByEvent,
+  TicketBaiWsWebhookNotificationEnvironment,
+  TicketBaiWsWebhookNotificationHeaders,
+  TicketBaiWsWebhookRequest,
+  TicketBaiWsWebhookResponse,
+  TicketBaiWsWebhookSpfeError,
 } from '@osumi/ticketbaiws';
 ```
 
@@ -457,29 +603,19 @@ Algunos ejemplos cURL/PHP utilizan un body JSON para filtrar un GET, mientras ot
 
 ### Respuesta del GET individual
 
-Aunque se documenta la ruta:
+`GET /webhooks/{codigo_webhook}/` devuelve un único
+objeto de configuración.
 
-```text
-GET /webhooks/{codigo_webhook}/
-```
+El SDK utiliza `TicketBaiWsWebhook` como tipo de `return`.
 
-el ejemplo de respuesta publicado es el mismo formato array utilizado para el listado.
-
-Por ello `webhooks.get()` mantiene un tipo compatible con objeto o array.
+El listado `GET /webhooks/` continúa devolviendo un array.
 
 ## Documentación oficial
 
-Crear webhook:
-
-https://ticketbaiws.eus/es/webhooks-post/
-
-Modificar webhook:
-
-https://ticketbaiws.eus/es/documentacion-api/webhooks-put/
-
-Consultar webhooks:
-
-https://ticketbaiws.eus/es/documentacion-api/webhooks-get/
+- [Crear webhook](https://ticketbaiws.eus/es/webhooks-post/)
+- [Modificar webhook](https://ticketbaiws.eus/es/webhooks-put/)
+- [Consultar webhooks](https://ticketbaiws.eus/es/webhooks-get/)
+- [Documentación general](https://ticketbaiws.eus/es/documentacion-api/)
 
 ---
 
