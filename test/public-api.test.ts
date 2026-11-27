@@ -82,6 +82,22 @@ describe('@osumi/ticketbaiws public API', (): void => {
 
     expect(client.bizkaia.lroe.receivedInvoices.cancel).toBeTypeOf('function');
 
+    expect(client.bizkaia.lroe.expensesWithoutInvoice.create).toBeTypeOf(
+      'function',
+    );
+
+    expect(client.bizkaia.lroe.expensesWithoutInvoice.update).toBeTypeOf(
+      'function',
+    );
+
+    expect(client.bizkaia.lroe.expensesWithoutInvoice.list).toBeTypeOf(
+      'function',
+    );
+
+    expect(client.bizkaia.lroe.expensesWithoutInvoice.cancel).toBeTypeOf(
+      'function',
+    );
+
     expect(client.bizkaia.lroe.cashCollections.create).toBeTypeOf('function');
 
     expect(client.bizkaia.lroe.cashCollections.update).toBeTypeOf('function');

@@ -232,3 +232,22 @@ export type {
   TicketBaiWsLroeCashPaymentWithoutInvoice,
   TicketBaiWsMutateLroeCashPaymentsRequest,
 } from './model/bizkaia/ticketbaiws-lroe-cash-payment.model.js';
+
+export type {
+  TicketBaiWsCancelLroeExpensesWithoutInvoiceRequest,
+  TicketBaiWsListLroeExpensesWithoutInvoiceRequest,
+  TicketBaiWsListLroeExpensesWithoutInvoiceResponse,
+  TicketBaiWsListLroeExpensesWithoutInvoiceResult,
+  TicketBaiWsLroeExpensesWithoutInvoiceBatchStatus,
+  TicketBaiWsLroeExpensesWithoutInvoiceMutationResponse,
+  TicketBaiWsLroeExpensesWithoutInvoiceMutationResult,
+  TicketBaiWsLroeExpenseWithoutInvoice,
+  TicketBaiWsLroeExpenseWithoutInvoiceConcept,
+  TicketBaiWsLroeExpenseWithoutInvoiceKey,
+  TicketBaiWsLroeExpenseWithoutInvoiceOperationResult,
+  TicketBaiWsLroeExpenseWithoutInvoiceQueryItem,
+  TicketBaiWsLroeExpenseWithoutInvoiceQueryStatus,
+  TicketBaiWsLroeExpenseWithoutInvoiceResultStatus,
+  TicketBaiWsLroeExpenseWithoutInvoiceTerritory,
+  TicketBaiWsMutateLroeExpensesWithoutInvoiceRequest,
+} from './model/bizkaia/ticketbaiws-lroe-expense-without-invoice.model.js';
