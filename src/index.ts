@@ -131,6 +131,18 @@ export type {
 } from './model/webhook/ticketbaiws-webhook.model.js';
 
 export type {
+  TicketBaiWsInvoiceStatusWebhookNotification,
+  TicketBaiWsSpfeReceivedWebhookNotification,
+  TicketBaiWsSpfeSentWebhookNotification,
+  TicketBaiWsSpfeStatusWebhookNotification,
+  TicketBaiWsWebhookNotification,
+  TicketBaiWsWebhookNotificationByEvent,
+  TicketBaiWsWebhookNotificationEnvironment,
+  TicketBaiWsWebhookNotificationHeaders,
+  TicketBaiWsWebhookSpfeError,
+} from './model/webhook/ticketbaiws-webhook-notification.model.js';
+
+export type {
   TicketBaiWsRepresentationPdfResponse,
   TicketBaiWsRepresentationRevokeResponse,
   TicketBaiWsRepresentationTemplateRequest,
