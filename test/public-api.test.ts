@@ -127,6 +127,10 @@ describe('@osumi/ticketbaiws public API', (): void => {
     expect(client.billing.customers.create).toBeTypeOf('function');
 
     expect(client.billing.customers.update).toBeTypeOf('function');
+
+    expect(client.billing.products.list).toBeTypeOf('function');
+
+    expect(client.billing.products.get).toBeTypeOf('function');
   });
 
   it('exposes the public error hierarchy', (): void => {

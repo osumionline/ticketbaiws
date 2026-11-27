@@ -286,3 +286,10 @@ export type {
   TicketBaiWsListBillingCustomersResponse,
   TicketBaiWsUpdateBillingCustomerRequest,
 } from './model/billing/ticketbaiws-billing-customer.model.js';
+
+export type {
+  TicketBaiWsBillingProduct,
+  TicketBaiWsBillingProductResponse,
+  TicketBaiWsListBillingProductsRequest,
+  TicketBaiWsListBillingProductsResponse,
+} from './model/billing/ticketbaiws-billing-product.model.js';

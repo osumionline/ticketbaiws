@@ -279,6 +279,36 @@ https://api.ticketbaiws.eus/openapi.json
 
 **Operación:** `POST /clientes/`
 
+### DISC-012 — Endpoints de clientes y productos ausentes del índice HTML
+
+**Estado:** Pendiente
+
+**Endpoints:**
+
+- GET/POST `/clientes/`
+- GET/PUT `/clientes/{id}/`
+- GET `/productos/`
+- GET `/productos/{codigo}/`
+
+El OpenAPI oficial 1.0.8 incluye las seis operaciones de
+clientes y productos de la herramienta de facturación.
+
+Sin embargo, el listado general de métodos de la página HTML
+de documentación no muestra estas operaciones.
+
+**Consulta a Berein:** incorporar los seis endpoints al índice
+de métodos del API y, si existen, enlazar sus páginas de
+documentación individual.
+
+**SDK:** implementa las seis operaciones documentadas en
+el OpenAPI mediante `client.billing.customers` y
+`client.billing.products`.
+
+**Fuentes:**
+
+- https://api.ticketbaiws.eus/openapi.json
+- https://ticketbaiws.eus/es/documentacion-api/
+
 ---
 
 ## 5. Cuestiones históricas
