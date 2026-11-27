@@ -125,6 +125,7 @@ export type {
   TicketBaiWsListWebhooksRequest,
   TicketBaiWsListWebhooksResponse,
   TicketBaiWsWebhook,
+  TicketBaiWsWebhookEvent,
   TicketBaiWsWebhookRequest,
   TicketBaiWsWebhookResponse,
 } from './model/webhook/ticketbaiws-webhook.model.js';
