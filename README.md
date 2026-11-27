@@ -2,7 +2,7 @@
 
 SDK TypeScript universal para la API REST de TicketBaiWS de Berein.
 
-Permite integrar TicketBAI, Verifactu, FacturaE y las operaciones específicas de BATUZ / LROE Bizkaia mediante una API tipada y orientada a TypeScript.
+Permite integrar TicketBAI, Verifactu, FacturaE, la facturación electrónica B2B mediante SPFE, la herramienta de facturación de Berein y las operaciones específicas de BATUZ / LROE Bizkaia mediante una API tipada y orientada a TypeScript.
 
 ## Características
 
@@ -25,14 +25,12 @@ npm install @osumi/ticketbaiws
 ## Uso básico
 
 ```ts
-import {
-	TicketBaiWsClient
-} from '@osumi/ticketbaiws';
+import { TicketBaiWsClient } from '@osumi/ticketbaiws';
 
 const client = new TicketBaiWsClient({
-	token: '...',
-	issuerNif: '...',
-	environment: 'test'
+  token: '...',
+  issuerNif: '...',
+  environment: 'test',
 });
 
 const status = await client.system.status();
@@ -43,8 +41,8 @@ console.log(status);
 Los entornos disponibles son:
 
 ```ts
-'test'
-'production'
+'test';
+'production';
 ```
 
 El consumidor de la librería es responsable de gestionar y proteger las credenciales utilizadas para acceder a TicketBaiWS.
@@ -66,6 +64,14 @@ client.licenses
 
 client.webhooks
 
+client.billing
+├── customers
+└── products
+
+client.spfe
+├── statuses
+└── receivedInvoices
+
 client.verifactu
 └── representation
 
@@ -73,6 +79,7 @@ client.bizkaia
 ├── epigraphs
 └── lroe
     ├── receivedInvoices
+    ├── expensesWithoutInvoice
     ├── cashCollections
     └── cashPayments
 ```
@@ -95,6 +102,15 @@ Los envíos de factura pueden procesarse de forma asíncrona. En ese caso, `crea
 
 El request de creación admite `sincrono?: boolean` para solicitar procesamiento síncrono cuando proceda.
 
+### Herramienta de facturación
+
+- Buscar, consultar, crear y modificar clientes.
+- Buscar y consultar productos.
+
+Los clientes y productos de la herramienta de facturación
+se comparten entre los entornos de pruebas y producción
+de TicketBaiWS.
+
 ### Validaciones
 
 - Validación de NIF mediante AEAT.
@@ -104,7 +120,19 @@ El request de creación admite `sincrono?: boolean` para solicitar procesamiento
 
 - Empresas.
 - Licencias.
-- Webhooks.
+- Webhooks: configuración, suscripción a eventos, consulta y eliminación.
+
+### Facturación electrónica B2B — SPFE
+
+- Comunicar pagos, cobros, rechazos e impagos.
+- Anular estados comunicados.
+- Consultar los estados enviados.
+- Consultar facturas electrónicas recibidas.
+- Recuperar el XML UBL original de las facturas.
+- Realizar consultas incrementales mediante `desde_id`.
+
+Los estados enviados pueden procesarse de forma
+asíncrona y devolver `result: 'PENDING'`.
 
 ### Verifactu
 
@@ -119,6 +147,7 @@ Gestión del documento de representación:
 
 - Consulta de epígrafes IAE.
 - Facturas recibidas.
+- Gastos sin factura.
 - Cobros por criterio de caja.
 - Pagos por criterio de caja.
 
@@ -146,12 +175,17 @@ La documentación completa incluye configuración, respuestas, errores, ejemplos
 - [Índice de documentación](https://github.com/osumionline/ticketbaiws/blob/main/docs/README.md)
 - [Primeros pasos](https://github.com/osumionline/ticketbaiws/blob/main/docs/getting-started.md)
 - [Facturación](https://github.com/osumionline/ticketbaiws/blob/main/docs/invoices.md)
+- [Clientes de la herramienta de facturación](https://github.com/osumionline/ticketbaiws/blob/main/docs/billing/customers.md)
+- [Productos de la herramienta de facturación](https://github.com/osumionline/ticketbaiws/blob/main/docs/billing/products.md)
+- [Estados SPFE](https://github.com/osumionline/ticketbaiws/blob/main/docs/spfe/statuses.md)
+- [Facturas recibidas SPFE](https://github.com/osumionline/ticketbaiws/blob/main/docs/spfe/received-invoices.md)
 - [Validaciones AEAT y VIES](https://github.com/osumionline/ticketbaiws/blob/main/docs/validation.md)
 - [Empresas](https://github.com/osumionline/ticketbaiws/blob/main/docs/companies.md)
 - [Licencias](https://github.com/osumionline/ticketbaiws/blob/main/docs/licenses.md)
 - [Webhooks](https://github.com/osumionline/ticketbaiws/blob/main/docs/webhooks.md)
 - [Documento de representación Verifactu](https://github.com/osumionline/ticketbaiws/blob/main/docs/verifactu.md)
 - [BATUZ / LROE Bizkaia](https://github.com/osumionline/ticketbaiws/blob/main/docs/bizkaia/README.md)
+- [Gastos sin factura LROE](https://github.com/osumionline/ticketbaiws/blob/main/docs/bizkaia/expenses-without-invoice.md)
 
 La carpeta `docs/` se mantiene en el repositorio y no forma parte del paquete publicado en npm.
 

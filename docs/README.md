@@ -10,9 +10,19 @@ El `README.md` de la raíz del proyecto está pensado como una introducción bre
 
 - [Primeros pasos](getting-started.md)
 
-### Facturación
+### Facturación TicketBAI / Verifactu
 
 - [Facturación](invoices.md)
+
+### Herramienta de facturación
+
+- [Clientes](billing/customers.md)
+- [Productos](billing/products.md)
+
+### Facturación electrónica B2B — SPFE
+
+- [Comunicación y consulta de estados](spfe/statuses.md)
+- [Facturas electrónicas recibidas](spfe/received-invoices.md)
 
 ### Validaciones
 
@@ -33,10 +43,9 @@ El `README.md` de la raíz del proyecto está pensado como una introducción bre
 - [Índice Bizkaia](bizkaia/README.md)
 - [Epígrafes IAE](bizkaia/epigraphs.md)
 - [Facturas recibidas](bizkaia/received-invoices.md)
+- [Gastos sin factura](bizkaia/expenses-without-invoice.md)
 - [Cobros por criterio de caja](bizkaia/cash-collections.md)
 - [Pagos por criterio de caja](bizkaia/cash-payments.md)
-
-Los documentos enlazados que todavía no existan se irán incorporando conforme se complete la documentación de cada dominio.
 
 ### Seguimiento de la API
 
@@ -146,12 +155,19 @@ client
 ├── companies
 ├── licenses
 ├── webhooks
+├── billing
+│   ├── customers
+│   └── products
+├── spfe
+│   ├── statuses
+│   └── receivedInvoices
 ├── verifactu
 │   └── representation
 └── bizkaia
     ├── epigraphs
     └── lroe
         ├── receivedInvoices
+        ├── expensesWithoutInvoice
         ├── cashCollections
         └── cashPayments
 ```
