@@ -269,3 +269,10 @@ export type {
   TicketBaiWsSpfeStatusResponse,
   TicketBaiWsSpfeStatusResult,
 } from './model/spfe/ticketbaiws-spfe-status.model.js';
+
+export type {
+  TicketBaiWsListSpfeReceivedInvoicesRequest,
+  TicketBaiWsListSpfeReceivedInvoicesResponse,
+  TicketBaiWsSpfeReceivedInvoice,
+  TicketBaiWsSpfeReceivedInvoiceState,
+} from './model/spfe/ticketbaiws-spfe-received-invoice.model.js';
