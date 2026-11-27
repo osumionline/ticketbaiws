@@ -164,17 +164,72 @@ const client = new TicketBaiWsClient({
 });
 
 const methods = [
-	client.system.status,
-	client.invoices.create,
-	client.validation.aeat,
-	client.companies.create,
-	client.licenses.list,
-	client.webhooks.list,
-	client.verifactu.representation.getTemplate,
-	client.bizkaia.epigraphs.list,
-	client.bizkaia.lroe.receivedInvoices.list,
-	client.bizkaia.lroe.cashCollections.list,
-	client.bizkaia.lroe.cashPayments.list
+  client.system.status,
+
+  client.invoices.create,
+  client.invoices.completeSimplified,
+  client.invoices.get,
+  client.invoices.getXml,
+  client.invoices.getPdf,
+  client.invoices.getFacturaE,
+  client.invoices.list,
+  client.invoices.cancel,
+  client.invoices.resend,
+
+  client.validation.aeat,
+  client.validation.vies,
+
+  client.companies.create,
+  client.companies.update,
+  client.companies.list,
+
+  client.licenses.create,
+  client.licenses.list,
+
+  client.webhooks.create,
+  client.webhooks.update,
+  client.webhooks.get,
+  client.webhooks.delete,
+  client.webhooks.list,
+
+  client.verifactu.representation.getTemplate,
+  client.verifactu.representation.upload,
+  client.verifactu.representation.get,
+  client.verifactu.representation.revoke,
+
+  client.bizkaia.epigraphs.list,
+
+  client.bizkaia.lroe.receivedInvoices.create,
+  client.bizkaia.lroe.receivedInvoices.update,
+  client.bizkaia.lroe.receivedInvoices.list,
+  client.bizkaia.lroe.receivedInvoices.cancel,
+
+  client.bizkaia.lroe.expensesWithoutInvoice.create,
+  client.bizkaia.lroe.expensesWithoutInvoice.update,
+  client.bizkaia.lroe.expensesWithoutInvoice.list,
+  client.bizkaia.lroe.expensesWithoutInvoice.cancel,
+
+  client.bizkaia.lroe.cashCollections.create,
+  client.bizkaia.lroe.cashCollections.update,
+  client.bizkaia.lroe.cashCollections.list,
+  client.bizkaia.lroe.cashCollections.cancel,
+
+  client.bizkaia.lroe.cashPayments.create,
+  client.bizkaia.lroe.cashPayments.update,
+  client.bizkaia.lroe.cashPayments.list,
+  client.bizkaia.lroe.cashPayments.cancel,
+
+  client.spfe.statuses.create,
+  client.spfe.statuses.list,
+  client.spfe.receivedInvoices.list,
+
+  client.billing.customers.list,
+  client.billing.customers.get,
+  client.billing.customers.create,
+  client.billing.customers.update,
+
+  client.billing.products.list,
+  client.billing.products.get,
 ];
 
 if (
@@ -213,15 +268,26 @@ console.log(
   writeFileSync(
     typecheckFile,
     `import {
-	TicketBaiWsClient,
-	type TicketBaiWsClientOptions,
-	type TicketBaiWsCreateCompanyRequest,
-	type TicketBaiWsCreateInvoiceRequest,
-	type TicketBaiWsRepresentationUploadRequest,
-	type TicketBaiWsViesValidationRequest,
-	type TicketBaiWsMutateLroeCashCollectionsRequest,
-	type TicketBaiWsMutateLroeCashPaymentsRequest,
-	type TicketBaiWsCreateLroeReceivedInvoicesRequest
+  TicketBaiWsClient,
+  type TicketBaiWsClientOptions,
+  type TicketBaiWsCreateCompanyRequest,
+  type TicketBaiWsCreateInvoiceRequest,
+  type TicketBaiWsRepresentationUploadRequest,
+  type TicketBaiWsViesValidationRequest,
+  type TicketBaiWsMutateLroeCashCollectionsRequest,
+  type TicketBaiWsMutateLroeCashPaymentsRequest,
+  type TicketBaiWsCreateLroeReceivedInvoicesRequest,
+  type TicketBaiWsMutateLroeExpensesWithoutInvoiceRequest,
+  type TicketBaiWsWebhookEvent,
+  type TicketBaiWsWebhookNotificationByEvent,
+  type TicketBaiWsDeleteWebhookResponse,
+  type TicketBaiWsSpfeStatusRequest,
+  type TicketBaiWsListSpfeReceivedInvoicesRequest,
+  type TicketBaiWsCreateBillingCustomerRequest,
+  type TicketBaiWsUpdateBillingCustomerRequest,
+  type TicketBaiWsListBillingCustomersResponse,
+  type TicketBaiWsBillingProduct,
+  type TicketBaiWsListBillingProductsResponse
 } from '${packageName}';
 
 const options: TicketBaiWsClientOptions = {
@@ -314,6 +380,95 @@ const upload:
 	)
 };
 
+const webhookEvents: readonly TicketBaiWsWebhookEvent[] = [
+  'cambio_estado',
+  'spfe_recibida'
+];
+
+const webhookNotification:
+  TicketBaiWsWebhookNotificationByEvent['spfe_recibida'] = {
+    evento: 'spfe_recibida',
+    id: 57,
+    factura: 'F-2026-001'
+  };
+
+const deletedWebhook: TicketBaiWsDeleteWebhookResponse = {
+  result: 'OK',
+  return: [],
+  msg: null
+};
+
+const expenses:
+  TicketBaiWsMutateLroeExpensesWithoutInvoiceRequest = {
+    ejercicio: 2026,
+    gastos: [
+      {
+        fecha_operacion: '01/11/2026',
+        concepto: '626',
+        importe: 12.5
+      }
+    ]
+  };
+
+const spfeStatus: TicketBaiWsSpfeStatusRequest = {
+  estado: 'pago',
+  factura: 'F-2026-001',
+  fecha_factura: '01/11/2026',
+  nif_emisor: 'B01000012',
+  nombre_emisor: 'Proveedor de ejemplo S.L.',
+  vencimiento: '01/12/2026'
+};
+
+const spfeReceivedFilters:
+  TicketBaiWsListSpfeReceivedInvoicesRequest = {
+    desde_id: 0,
+    limite: 500,
+    ubl: true
+  };
+
+const billingCustomer:
+  TicketBaiWsCreateBillingCustomerRequest = {
+    nombre: 'Cliente de prueba'
+  };
+
+const billingCustomerUpdate:
+  TicketBaiWsUpdateBillingCustomerRequest = {
+    email: 'cliente@example.com'
+  };
+
+const billingCustomers:
+  TicketBaiWsListBillingCustomersResponse = {
+    result: 'OK',
+    return: [],
+    msg: null,
+    count: 0
+  };
+
+const billingProduct: TicketBaiWsBillingProduct = {
+  codigo: '00123',
+  referencia: 'REF-001',
+  descripcion: 'Producto de prueba',
+  nombre_en: 'Test product',
+  nombre_eu: 'Probako produktua',
+  marca: '',
+  familia: 'Servicios',
+  codigo_familia: '12',
+  hs_code: '',
+  cantidad: 1,
+  importe_unitario: 100,
+  tipo_iva: 21,
+  tipo_req: 0,
+  tipo_retencion: 0
+};
+
+const billingProducts:
+  TicketBaiWsListBillingProductsResponse = {
+    result: 'OK',
+    return: [billingProduct],
+    msg: null,
+    count: 1
+  };
+
 void client;
 void invoice;
 void company;
@@ -322,6 +477,17 @@ void receivedInvoices;
 void collections;
 void payments;
 void upload;
+void webhookEvents;
+void webhookNotification;
+void deletedWebhook;
+void expenses;
+void spfeStatus;
+void spfeReceivedFilters;
+void billingCustomer;
+void billingCustomerUpdate;
+void billingCustomers;
+void billingProduct;
+void billingProducts;
 `,
     'utf8',
   );
